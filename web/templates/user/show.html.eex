@@ -1,0 +1,57 @@
+<h2>Show user</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @user.name %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+
+  <li>
+    <strong>Taunt:</strong>
+    <%= @user.taunt %>
+  </li>
+
+  <li>
+    <strong>Wins:</strong>
+    <%= @user.wins %>
+  </li>
+
+  <li>
+    <strong>Losses:</strong>
+    <%= @user.losses %>
+  </li>
+
+</ul>
+
+<table class="table table-compact table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Opponent</th>
+      <th>Result</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for game <- games(@user, @users) do %>
+      <tr>
+        <td><%= game.date %></td>
+        <td><%= game.opponent %></td>
+        <td><%= game.result %></td>
+        <td><%= game.score %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<ul>
+
+</ul>
+
+<%= link "Edit", to: user_path(@conn, :edit, @user) %>
+<%= link "Back", to: user_path(@conn, :index) %>
