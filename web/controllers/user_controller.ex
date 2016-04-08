@@ -6,7 +6,7 @@ defmodule PhxPong.UserController do
   plug :scrub_params, "user" when action in [:create, :update]
 
   def index(conn, _params) do
-    users = Repo.all(User)
+    users = Repo.all(User) |> Repo.preload(:p1_games) |> Repo.preload(:p2_games)
     render(conn, "index.html", users: users)
   end
 

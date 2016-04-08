@@ -1,15 +1,16 @@
-<h2>Listing users</h2>
 
-<table class="table">
+<h4>Launchpad Lab</h4>
+<h6>Current Standings</h6>
+
+<table class="u-full-width">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Email</th>
-      <th>Taunt</th>
-      <th>Wins</th>
-      <th>Losses</th>
-      <th>Win %</th>
-
+      <th>W - L</th>
+      <th>GP</th>
+      <th>PCT</th>
+      <th>L10</th>
+      <th>STRK</th>
       <th></th>
     </tr>
   </thead>
@@ -17,16 +18,13 @@
 <%= for user <- @users do %>
     <tr>
       <td><%= user.name %></td>
-      <td><%= user.email %></td>
-      <td><%= user.taunt %></td>
-      <td><%= user.wins %></td>
-      <td><%= user.losses %></td>
-      <td><%= win_pct user %></td>
-
-      <td class="text-right">
-        <%= link "Show", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %>
-        <%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %>
-        <%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      <td><%= user.wins %> - <%= user.losses %></td>
+      <td><%= user.losses + user.wins%></td>
+      <td><%= win_pct user %>%</td>
+      <td><%#= last_10 user %></td>
+      <td><%#= user.losses + user.wins%></td>
+      <td>
+        <%= link "Details", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %>
       </td>
     </tr>
 <% end %>

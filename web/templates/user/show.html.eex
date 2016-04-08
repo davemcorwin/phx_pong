@@ -1,57 +1,34 @@
-<h2>Show user</h2>
+<h2><%= @user.name %></h2>
 
-<ul>
+<div class="row">
+  <div class="eleven columns">
+    <h4><%= @user.name %></h4>
+    <p><%= "#{@user.wins} - #{@user.losses}, #{rank(@user, @users)} in LaunchPad Lab" %></p>
+  </div>
+  <div class="one column">
+    <p><%= link "Edit", to: user_path(@conn, :edit, @user) %></p>
+  </div>
+</div>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @user.name %>
-  </li>
-
-  <li>
-    <strong>Email:</strong>
-    <%= @user.email %>
-  </li>
-
-  <li>
-    <strong>Taunt:</strong>
-    <%= @user.taunt %>
-  </li>
-
-  <li>
-    <strong>Wins:</strong>
-    <%= @user.wins %>
-  </li>
-
-  <li>
-    <strong>Losses:</strong>
-    <%= @user.losses %>
-  </li>
-
-</ul>
-
-<table class="table table-compact table-striped">
+<table class="u-full-width">
   <thead>
     <tr>
       <th>Date</th>
       <th>Opponent</th>
       <th>Result</th>
       <th>Score</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <%= for game <- games(@user, @users) do %>
       <tr>
         <td><%= game.date %></td>
-        <td><%= game.opponent %></td>
+        <td>vs <%= game.opponent %></td>
         <td><%= game.result %></td>
         <td><%= game.score %></td>
+        <td>Final<%#= game.status %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<ul>
-
-</ul>
-
-<%= link "Edit", to: user_path(@conn, :edit, @user) %>
-<%= link "Back", to: user_path(@conn, :index) %>
