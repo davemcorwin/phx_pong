@@ -1,16 +1,10 @@
 <h2><%= @user.name %></h2>
 
-<div class="row">
-  <div class="eleven columns">
-    <h4><%= @user.name %></h4>
-    <p><%= "#{@user.wins} - #{@user.losses}, #{rank(@user, @users)} in LaunchPad Lab" %></p>
-  </div>
-  <div class="one column">
-    <p><%= link "Edit", to: user_path(@conn, :edit, @user) %></p>
-  </div>
-</div>
+<%= link "Edit", to: user_path(@conn, :edit, @user), style: "float: right;" %>
 
-<table class="u-full-width">
+<p><%= "#{@user.wins} - #{@user.losses}, #{rank(@user, @users)} in LaunchPad Lab" %></p>
+
+<table class="table">
   <thead>
     <tr>
       <th>Date</th>
