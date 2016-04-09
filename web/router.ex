@@ -17,7 +17,9 @@ defmodule PhxPong.Router do
     pipe_through :browser # Use the default browser stack
 
     resources "/users", UserController
-    get "/", UserController, :index
+    get "/dashboard", UserController, :index
+
+    get "/", ConsoleController, :main_menu
   end
 
   # Other scopes may use custom stacks.
