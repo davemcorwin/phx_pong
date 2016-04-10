@@ -68,7 +68,6 @@ exports.config = {
     // All other deps in package.json will be excluded from the bundle.
     whitelist: [
       "classnames",
-      "keymaster",
       "page",
       "phoenix",
       "phoenix_html",

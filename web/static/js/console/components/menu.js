@@ -1,9 +1,9 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Classnames from 'classnames'
-import Key from 'keymaster'
+import KeyHandler from './key-handler'
 import MenuItem from './menu-item'
 
-class Menu extends React.Component {
+class Menu extends Component {
 
   static propTypes = {
     items:      PT.array,
@@ -18,57 +18,34 @@ class Menu extends React.Component {
     this.state =  { highlighted: 0, selected: -1 }
   }
 
-  componentDidMount() {
-    Key('a', () => console.log('omg!'))
+  handleKeyHold(key) {
+
+    const { items, onSelect, onUnSelect } = this.props
+    const { highlighted, selected } = this.state
+
+    const item = items[highlighted]
+
+    if (selected === -1) {
+      this.setState({
+        selected: highlighted,
+        highlighted: -1
+      }, () => { if (onSelect) onSelect(item) })
+    } else {
+      this.setState({
+        highlighted: selected,
+        selected: -1,
+      }, () => { if (onUnSelect) onUnSelect(item) })
+    }
   }
 
-  // mixins: [KeyHandler],
+  handleKeyTap(key) {
+    const { items } = this.props
+    const { highlighted, selected } = this.state
 
-  // hold(keyCode) {
-  //   if (this.props.listens.indexOf(keyCode) === -1) {
-  //     return;
-  //   }
-  //
-  //   var item = this.props.items[this.state.highlighted];
-  //
-  //   if (this.state.selected === -1) {
-  //     this.setState({
-  //       selected: this.state.highlighted,
-  //       highlighted: -1
-  //     });
-  //
-  //     if (this.props.onSelect) {
-  //       this.props.onSelect(item);
-  //     }
-  //
-  //   } else {
-  //     this.setState({
-  //       highlighted: this.state.selected,
-  //       selected: -1,
-  //     });
-  //
-  //     if (this.props.onUnSelect) {
-  //       this.props.onUnSelect(item);
-  //     }
-  //   }
-  // }
-  //
-  // tap(keyCode) {
-  //   if (this.props.listens.indexOf(keyCode) === -1) {
-  //     return
-  //   }
-  //
-  //   // Do nothing if item has been selected
-  //   if (this.state.selected !== -1) {
-  //     return
-  //   }
-  //
-  //   var highlighted = (this.state.highlighted + 1) % this.props.items.length;
-  //   this.setState({highlighted: highlighted})
-  // }
+    // Do nothing if item has been selected
+    if (selected !== -1) return
 
-  handleKeyPress(event) {
-    console.log(event.key)
+    this.setState({highlighted: (highlighted + 1) % items.length})
   }
 
   componentWillReceiveProps(nextProps) {
@@ -79,11 +56,15 @@ class Menu extends React.Component {
 
   render() {
 
-    const { items } = this.props
+    const { items, listens } = this.props
     const { highlighted, selected } = this.state
 
     return (
-      <div>
+      <KeyHandler
+        keys={listens}
+        tapHandler={::this.handleKeyTap}
+        holdHandler={::this.handleKeyHold}>
+
         { items.map((item, idx) =>
           <MenuItem
             title={item.title}
@@ -92,7 +73,7 @@ class Menu extends React.Component {
             key={`item${idx}`}
           />)
         }
-      </div>
+      </KeyHandler>
     )
   }
 }
