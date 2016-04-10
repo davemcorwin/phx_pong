@@ -11,13 +11,15 @@ class MenuItem extends Component {
 
   render() {
 
+    const { highlighted, selected, title } = this.props
+
     const classes = Classnames({
       'menu-item':  true,
-      'game-start': this.props.highlighted,
-      'selected':   this.props.selected
+      'game-start': highlighted,
+      'selected':   selected
     })
 
-    return <p className={classes}>{this.props.title}</p>
+    return <p className={classes}>{title}</p>
   }
 }
 

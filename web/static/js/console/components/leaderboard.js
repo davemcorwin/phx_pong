@@ -1,13 +1,10 @@
 import React, { Component, PropTypes as PT } from 'react'
+import { Player } from './lib/types'
 
 class Leaderboard extends Component {
 
   static propTypes = {
-    players: PT.arrayOf(PT.shape({
-      name: PT.string,
-      wins: PT.number,
-      losses: PT.number
-    }))
+    players: PT.arrayOf(Player)
   };
 
   render() {

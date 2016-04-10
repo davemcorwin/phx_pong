@@ -1,8 +1,9 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
+import { Keys } from './lib/key-handler'
 import PlayerMenu from './player-menu'
 
-class ChoosePlayerMenu extends Component {
+class ChoosePlayerView extends Component {
 
   constructor() {
     super()
@@ -60,14 +61,14 @@ class ChoosePlayerMenu extends Component {
       <div className="game-container">
         <PlayerMenu
           menuItems={menuItems}
-          listens={[KeyCode.Left]}
+          listens={[Keys.Left]}
           onSelect={this.selectPlayer.bind(this, 'player1')}
           onUnSelect={this.unSelectPlayer.bind(this, 'player1')}
           side="left"
         />
         <PlayerMenu
           menuItems={menuItems}
-          listens={[KeyCode.Right]}
+          listens={[Keys.Right]}
           handleSelect={this.selectPlayer.bind(this, 'player2')}
           handleUnSelect={this.unSelectPlayer.bind(this, 'player2')}
           side="right"
@@ -77,4 +78,4 @@ class ChoosePlayerMenu extends Component {
   }
 }
 
-export default ChoosePlayerMenu
+export default ChoosePlayerView

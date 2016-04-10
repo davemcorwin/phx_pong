@@ -1,12 +1,12 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Classnames from 'classnames'
-import KeyHandler from './key-handler'
+import KeyHandler, { Events, Keys } from './lib/key-handler'
 import MenuItem from './menu-item'
 
 class Menu extends Component {
 
   static propTypes = {
-    items:      PT.array,
+    items:      PT.arrayOf(PT.object),
     listens:    PT.array.isRequired,
     onSelect:   PT.func,
     onUnSelect: PT.func,
@@ -15,7 +15,27 @@ class Menu extends Component {
 
   constructor() {
     super()
+    this.keyHandler = null
     this.state =  { highlighted: 0, selected: -1 }
+  }
+
+  componentDidMount() {
+    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.Right], ::this.handleKeyEvent)
+  }
+
+  componentWillUnmount() {
+    KeyHandler.removeListener(this.keyHandler)
+  }
+
+  handleKeyEvent(event, key) {
+    switch(event) {
+      case Events.HOLD:
+        handleKeyHold(key)
+        break
+      case Events.TAP:
+        handleKeyTap(key)
+        break
+    }
   }
 
   handleKeyHold(key) {
@@ -60,11 +80,7 @@ class Menu extends Component {
     const { highlighted, selected } = this.state
 
     return (
-      <KeyHandler
-        keys={listens}
-        tapHandler={::this.handleKeyTap}
-        holdHandler={::this.handleKeyHold}>
-
+      <div>
         { items.map((item, idx) =>
           <MenuItem
             title={item.title}
@@ -73,7 +89,7 @@ class Menu extends Component {
             key={`item${idx}`}
           />)
         }
-      </KeyHandler>
+      </div>
     )
   }
 }
