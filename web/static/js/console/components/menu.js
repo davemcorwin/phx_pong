@@ -1,6 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Classnames from 'classnames'
-import KeyHandler, { Events, Keys } from './lib/key-handler'
+import KeyHandler, { Events } from '../lib/key-handler'
 import MenuItem from './menu-item'
 
 class Menu extends Component {
@@ -20,7 +20,7 @@ class Menu extends Component {
   }
 
   componentDidMount() {
-    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.Right], ::this.handleKeyEvent)
+    this.keyHandler = KeyHandler.addListener(this.props.listens, ::this.handleKeyEvent)
   }
 
   componentWillUnmount() {
@@ -30,10 +30,10 @@ class Menu extends Component {
   handleKeyEvent(event, key) {
     switch(event) {
       case Events.HOLD:
-        handleKeyHold(key)
+        this.handleKeyHold(key)
         break
       case Events.TAP:
-        handleKeyTap(key)
+        this.handleKeyTap(key)
         break
     }
   }

@@ -1,11 +1,15 @@
 import React, { Component, PropTypes as PT } from 'react'
-import * from './lib/game'
-import KeyHandler, { Events, Keys } from './lib/key-handler'
+import * as Game from '../lib/game'
+import KeyHandler, { Events, Keys } from '../lib/key-handler'
 import PlayerScore from './player-score'
 import EndGameMessage from './end-game-message'
 import ServingMenu from './serving-menu'
 
 class GameView extends Component {
+
+  static propTypes = {
+    gameId: PT.string.isRequired
+  };
 
   constructor() {
     super()
@@ -33,11 +37,11 @@ class GameView extends Component {
 
     this.setState({ isReady: true, game: game })
 
-    this.keyHandler = KeyHander.register([Keys.LEFT, Keys.RIGHT], ::this.handleKeyTap)
+    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKeyTap)
   }
 
   componenWillUnmount() {
-    KeyHandler.unregister(this.keyHandler)
+    KeyHandler.removeListener(this.keyHandler)
   }
 
   handleKeyTap(event, key) {
@@ -45,7 +49,7 @@ class GameView extends Component {
       case Events.TAP:
         const { game } = this.state
 
-        if (!inProgress(game)) return
+        if (!Game.inProgress(game)) return
 
         // update game in db
         this.setState({ game: Object.assign({}, game, {
@@ -57,29 +61,31 @@ class GameView extends Component {
 
   render() {
 
-    const { game } = this.state
+    if (!this.state.isReady) return null
+
+    const { game, game: { player1, player2 } } = this.state
 
     return (
       <div className="game-container">
         <PlayerScore
-          isServing={currentServer(game) === game.player1.id}
-          playerName={game.player1.name}
+          isServing={Game.isServer(game, player1)}
+          playerName={player1.name}
           score={game.player1Score}
           side="left"
         />
         <PlayerScore
-          isServing={currentServer(game) === game.player2.id}
-          playerName={game.player2.name}
+          isServing={Game.isServer(game, player2)}
+          playerName={player2.name}
           score={game.player2Score}
           side="right"
         />
 
-        { isPending(game) ?
+        { Game.isPending(game) ?
             <ServingMenu game={game}/> : null
         }
 
-        { isOver(game) ?
-            <EndGameMessage game={game} winner={winner(game)} /> : null
+        { Game.isOver(game) ?
+            <EndGameMessage game={game} winner={Game.winner(game)} /> : null
         }
       </div>
     )

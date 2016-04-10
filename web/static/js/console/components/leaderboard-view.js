@@ -1,7 +1,8 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
-import { Keys } from './lib/key-handler'
+import { Keys } from '../lib/key-handler'
 import Leaderboard from './leaderboard'
+import Menu from './menu'
 
 class LeaderboardView extends Component {
 
@@ -30,7 +31,7 @@ class LeaderboardView extends Component {
       { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
     ]
 
-    this.setState(isReady: true, players: players))
+    this.setState({ isReady: true, players: players })
   }
 
   onSelect(item, menu) {
@@ -53,9 +54,8 @@ class LeaderboardView extends Component {
         break
 
       case 'main':
-        Page('/main')
+        Page('/')
         break
-      }
     }
   }
 
@@ -80,11 +80,13 @@ class LeaderboardView extends Component {
 
   render() {
 
-    const { pageSize } = this.props
-    const { currentPage, forceReset, players } = this.state
+    const { currentPage, forceReset, isReady, players } = this.state
 
-    const pagePlayers = this.getPlayers(pageSize, currentPage, players)
-    const menuItems = this.getMenuItems(pageSize, currentPage, players)
+    if (!isReady) return null
+
+    const { pageSize } = this.props,
+      pagePlayers = this.getPlayers(pageSize, currentPage, players),
+      menuItems = this.getMenuItems(pageSize, currentPage, players)
 
     return (
       <div>
@@ -94,7 +96,7 @@ class LeaderboardView extends Component {
         <Leaderboard players={pagePlayers} />
         <Menu
           items={menuItems}
-          listens={[Keys.Left, Keys.Right]}
+          listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={::this.onSelect}
           forceReset={forceReset}
         />

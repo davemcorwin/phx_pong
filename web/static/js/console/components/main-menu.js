@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Page from 'page'
-import { Keys } from './lib/key-handler'
-import { Menu, MenuItem } from './components'
+import { Keys } from '../lib/key-handler'
+import Menu from './menu'
+import MenuItem from './menu-item'
 
 class MainMenu extends Component {
 
@@ -33,7 +34,7 @@ class MainMenu extends Component {
         </h1>
         <Menu
           items={this.menuItems}
-          listens={[Keys.Left, Keys.Right]}
+          listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={::this.onSelect}
         />
         <p className="game-credits">&copy; LaunchPad Lab 2016</p>

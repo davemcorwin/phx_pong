@@ -1,8 +1,8 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 
-import { Game, Player } from './lib/types'
-import { Keys } from './lib/key-handler'
+import { Game, Player } from '../types'
+import { Keys } from '../lib/key-handler'
 
 class EndGameMessage extends Component {
 

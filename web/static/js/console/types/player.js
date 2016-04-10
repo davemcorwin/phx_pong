@@ -1,4 +1,4 @@
-import { PropTypes as PT } from react
+import { PropTypes as PT } from 'react'
 
 export default PT.shape({
   id:     PT.number.isRequired,

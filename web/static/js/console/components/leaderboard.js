@@ -1,5 +1,5 @@
 import React, { Component, PropTypes as PT } from 'react'
-import { Player } from './lib/types'
+import { Player } from '../types'
 
 class Leaderboard extends Component {
 

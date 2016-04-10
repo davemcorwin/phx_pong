@@ -1,6 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
-import { Game } from './lib/types'
-import { Keys } from './lib/key-handler'
+import { Game } from '../types'
+import { Keys } from '../lib/key-handler'
 
 class ServingMenu extends Component {
 

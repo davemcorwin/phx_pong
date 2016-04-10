@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import Page from 'page'
-
 import KeyHandler from './lib/key-handler'
-
-import * from './components'
+import {
+  ChoosePlayerView,
+  GameView,
+  LeaderboardView,
+  MainMenu } from './components'
 
 const FourOhFour = () => <h1>404 son!</h1>
 
@@ -18,20 +20,17 @@ class Console extends Component {
 
     KeyHandler.register(window)
 
-    const r = component => ctx => this.setState({ component: component })
+    Page('/',                             ctx => this.setState({ component: <MainMenu />}))
+    Page('/leaders',                      ctx => this.setState({ component: <LeaderboardView />}))
+    Page('/game/new',                     ctx => this.setState({ component: <ChoosePlayerView />}))
+    Page('/game/:id',                     ctx => this.setState({ component: <GameView gameId={ctx.params.id}/>}))
+    // Page('/game_guest/new',               ctx => this.setState({ component: <GuestServingMenu />}))
+    // Page('/game_guest/play/:firstServer', ctx => this.setState({ component: <GuestPlay />}))
 
-    Page('/',                             r(<MainMenu />))
-    Page('/leaders',                      r(<LeaderboardView />))
-    Page('/game/new',                     r(<ChoosePlayerView />))
-    Page('/game/:id',                     r(<GameView />))
-    // Page('/game_guest/new',               r(<GuestServingMenu />))
-    // Page('/game_guest/play/:firstServer', r(<GuestPlay />))
-
-    Page('*', r(<FourOhFour />))
+    Page('*', ctx => this.setState({ component: <FourOhFour />}))
 
     Page.start()
   }
-
 
   componentWillUnmount() {
     KeyHandler.unregister()

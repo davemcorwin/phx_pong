@@ -1,6 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
-import { Keys } from './lib/key-handler'
+import { Keys } from '../lib/key-handler'
 import PlayerMenu from './player-menu'
 
 class ChoosePlayerView extends Component {
@@ -22,17 +22,17 @@ class ChoosePlayerView extends Component {
       { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
     ]
 
-    this.setState(isReady: true, players: players))
+    this.setState({ isReady: true, players: players})
   }
 
   componentWillUpdate(_, nextState) {
 
-    const { player1, player2 } = this.state
+    const { player1, player2 } = nextState
 
     if (player1 && player2) {
       //create a new game then
       const id = 1
-      Page(`game/${id}`)
+      Page(`/game/${id}`)
     }
   }
 
@@ -46,7 +46,9 @@ class ChoosePlayerView extends Component {
 
   render() {
 
-    const { players } = this.state
+    const { isReady, players } = this.state
+
+    if (!isReady) return null
 
     const menuItems = players.map(player => {
       return { title: player.name, player: player }
@@ -56,14 +58,14 @@ class ChoosePlayerView extends Component {
       <div className="game-container">
         <PlayerMenu
           menuItems={menuItems}
-          listens={[Keys.Left]}
-          onSelect={this.selectPlayer.bind(this, 'player1')}
-          onUnSelect={this.unSelectPlayer.bind(this, 'player1')}
+          listens={[Keys.LEFT]}
+          handleSelect={this.selectPlayer.bind(this, 'player1')}
+          handleUnSelect={this.unSelectPlayer.bind(this, 'player1')}
           side="left"
         />
         <PlayerMenu
           menuItems={menuItems}
-          listens={[Keys.Right]}
+          listens={[Keys.RIGHT]}
           handleSelect={this.selectPlayer.bind(this, 'player2')}
           handleUnSelect={this.unSelectPlayer.bind(this, 'player2')}
           side="right"

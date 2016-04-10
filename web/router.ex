@@ -19,7 +19,7 @@ defmodule PhxPong.Router do
     resources "/users", UserController
     get "/dashboard", UserController, :index
 
-    get "/", ConsoleController, :main_menu
+    get "/*path", ConsoleController, :main_menu
   end
 
   # Other scopes may use custom stacks.

@@ -1,11 +1,12 @@
 import React, { Component, PropTypes as PT } from 'react'
+import Menu from './menu'
 
 class PlayerMenu extends Component {
 
   static propTypes = {
       listens:        PT.arrayOf(PT.number).isRequired,
       menuItems:      PT.arrayOf(PT.object).isRequired,
-      side:           PT.string,isRequired,
+      side:           PT.string.isRequired,
       handleSelect:   PT.func.isRequired,
       handleUnSelect: PT.func.isRequired
   };

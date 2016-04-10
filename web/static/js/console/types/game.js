@@ -1,4 +1,4 @@
-import { PropTypes as PT } from react
+import { PropTypes as PT } from 'react'
 
 import GameDetails from './game-details'
 import Player from './player'
