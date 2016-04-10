@@ -1,6 +1,7 @@
 import React from 'react'
 import Page from 'page'
 import MainMenu from './main-menu'
+import LeaderboardView from './leaderboard-view'
 
 const FourOhFour = () => <h1>404 son!</h1>
 
@@ -12,13 +13,17 @@ class Console extends React.Component {
 
   componentDidMount() {
 
-    Page('/', ctx =>
-      this.setState({ component: <MainMenu /> })
-    )
+    const r = component => ctx => this.setState({ component: component })
 
-    Page('*', ctx =>
-      this.setState({ component: <FourOhFour /> })
-    )
+    Page('/',                             r(<MainMenu />))
+    Page('/leaders',                      r(<LeaderboardView />))
+    Page('/game/new',                     r(<ChoosePlayerMenu />))
+    Page('/game_guest/new',               r(<GuestServingMenu />))
+    Page('/game/:id',                     r(<ServingMenu />))
+    Page('/game/:id/play',                r(<Play />))
+    Page('/game_guest/play/:firstServer', r(<GuestPlay />))
+
+    Page('*', r(<FourOhFour />))
 
     Page.start()
   }
