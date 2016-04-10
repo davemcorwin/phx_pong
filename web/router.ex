@@ -13,6 +13,12 @@ defmodule PhxPong.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", PhxPong do
+    pipe_through :api
+
+    resources "/players", UserController, only: [:index]
+  end
+  
   scope "/", PhxPong do
     pipe_through :browser # Use the default browser stack
 
@@ -22,8 +28,4 @@ defmodule PhxPong.Router do
     get "/*path", ConsoleController, :main_menu
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", PhxPong do
-  #   pipe_through :api
-  # end
 end

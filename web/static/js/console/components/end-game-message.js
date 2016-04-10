@@ -18,7 +18,7 @@ class EndGameMessage extends Component {
 
     switch(item.action) {
       case 'main':
-        Page('/main')
+        Page('/')
         break
       default:
         const newFirstServer = game.firstServer === game.player1 ? game.player2 : game.player1

@@ -4,6 +4,18 @@ defmodule PhxPong.UserView do
   alias PhxPong.User
   alias PhxPong.Game
 
+  def render("index.json", %{users: users}) do
+    %{data: render_many(users, PhxPong.UserView, "user.json")}
+  end
+
+  def render("user.json", %{user: user}) do
+    %{ id: user.id,
+      name: user.name,
+      taunt: user.taunt,
+      wins: user.wins,
+      losses: user.losses }
+  end
+
   def win_pct(%User{wins: 0}), do: 0
   def win_pct(%User{losses: 0}), do: 0
   def win_pct(user) do
