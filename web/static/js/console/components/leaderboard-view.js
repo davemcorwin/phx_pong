@@ -1,5 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
+import { Keys } from './lib/key-handler'
 import Leaderboard from './leaderboard'
 
 class LeaderboardView extends Component {
@@ -23,11 +24,14 @@ class LeaderboardView extends Component {
   }
 
   componentDidMount() {
-    // return {
-    //   players: Players.find({}, { sort: { winPct: -1, losses: 1, wins: -1, name: 1 } }).fetch()
-    // };
-    // fetchplayers.then(players => this.setState(isReady: true, players: players))
-  },
+
+    const players = [
+      { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
+      { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
+    ]
+
+    this.setState(isReady: true, players: players))
+  }
 
   onSelect(item, menu) {
 
@@ -90,7 +94,7 @@ class LeaderboardView extends Component {
         <Leaderboard players={pagePlayers} />
         <Menu
           items={menuItems}
-          listens={[KeyCode.Left, KeyCode.Right]}
+          listens={[Keys.Left, Keys.Right]}
           onSelect={::this.onSelect}
           forceReset={forceReset}
         />

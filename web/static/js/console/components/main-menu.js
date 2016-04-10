@@ -1,13 +1,9 @@
-import React from 'react'
-import { Menu, MenuItem } from './components'
+import React, { Component } from 'react'
 import Page from 'page'
+import { Keys } from './lib/key-handler'
+import { Menu, MenuItem } from './components'
 
-const KeyCode = {
-  Left: 65,
-  Right: 66
-}
-
-class MainMenu extends React.Component {
+class MainMenu extends Component {
 
   constructor() {
     super()
@@ -37,7 +33,7 @@ class MainMenu extends React.Component {
         </h1>
         <Menu
           items={this.menuItems}
-          listens={[KeyCode.Left, KeyCode.Right]}
+          listens={[Keys.Left, Keys.Right]}
           onSelect={::this.onSelect}
         />
         <p className="game-credits">&copy; LaunchPad Lab 2016</p>

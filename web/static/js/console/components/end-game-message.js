@@ -8,6 +8,7 @@ class EndGameMessage extends Component {
 
   static propTypes = {
     game:    Game.isRequired,
+    guest:   PT.bool,
     winner:  Player.isRequired
   };
 
@@ -20,14 +21,14 @@ class EndGameMessage extends Component {
         Page('/main')
         break
       default:
-        newFirstServer = game.firstServer === game.player1 ? game.player2 : game.player1
+        const newFirstServer = game.firstServer === game.player1 ? game.player2 : game.player1
 
         if (guest)
           Page('/game_guest/new')
         else {
-          // Meteor.call("playAgain", this.props.player1, this.props.player2, newFirstServer, (_,gameId) => {
-          //   Page(`/game/${gameId}/play`)
-          // });
+          // create new game
+          const gameId = 1
+          Page(`/game/${gameId}/play`)
         }
     }
   }

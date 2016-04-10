@@ -16,30 +16,25 @@ class ChoosePlayerView extends Component {
   }
 
   componentDidMount() {
-    // return {
-    //   players: Players.find({}, { sort: { name: 1 } }).fetch()
-    // };
-    // // fetchplayers.then(players => this.setState(isReady: true, players: players))
+
+    const players = [
+      { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
+      { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
+    ]
+
+    this.setState(isReady: true, players: players))
   }
 
   componentWillUpdate(_, nextState) {
+
     const { player1, player2 } = this.state
 
     if (player1 && player2) {
       //create a new game then
-      //Page('game/:id')
+      const id = 1
+      Page(`game/${id}`)
     }
   }
-
-  // selectPlayer(player1OrPlayer2, player) {
-  //   this[player1OrPlayer2] = player;
-  //
-  //   if (this.player1 && this.player2) {
-  //     Meteor.call("newGame", this.player1, this.player2, (_,gameId) => {
-  //       Page(`/game/${gameId}`);
-  //     });
-  //   }
-  // },
 
   selectPlayer(player, item) {
     this.setState({ [player]: item.player })

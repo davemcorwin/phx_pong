@@ -3,10 +3,7 @@ import Page from 'page'
 
 import KeyHandler from './lib/key-handler'
 
-import MainMenu from './main-menu'
-import LeaderboardView from './leaderboard-view'
-import ChoosePlayerView from './choose-player-view'
-import GameView from './game-view'
+import * from './components'
 
 const FourOhFour = () => <h1>404 son!</h1>
 

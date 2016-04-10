@@ -4,7 +4,7 @@ import { Player } from './lib/types'
 class Leaderboard extends Component {
 
   static propTypes = {
-    players: PT.arrayOf(Player)
+    players: PT.arrayOf(Player).isRequired
   };
 
   render() {

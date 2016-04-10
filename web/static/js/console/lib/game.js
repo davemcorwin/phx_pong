@@ -5,26 +5,20 @@ export function currentServer(game) {
 
   return modChanges === 0 ? game.firstServer :
     game.firstServer === game.player1.id ? game.player2.id : game.player1.id
-
-  // if (modChanges === 0) {
-  //   return game.firstServer;
-  // } else {
-  //   return game.firstServer === this.data.player1._id ? this.data.player2._id : this.data.player1._id;
-  // }
 }
 
 export function winner(game) {
-  return game.winner ? game.winner === game.player1.id ? game.player1 : game.player2 : ''
+  return game.details.winner ? game.details.winner === game.player1.id ? game.player1 : game.player2 : null
 }
 
 export function isPending(game) {
-  return false
+  return game.status === 'pending'
 }
 
 export function inProgress(game) {
-  return game.inProgress
+  return game.status === 'in-progress'
 }
 
 export function isOver(game) {
-  return false
+  return game.status === 'over'
 }
