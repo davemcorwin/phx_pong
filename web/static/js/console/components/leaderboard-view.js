@@ -30,27 +30,18 @@ class LeaderboardView extends Component {
 
     Api.get('players')
       .then(response =>
-        this.setState({ status: 'ready', players: response.data })
+        this.setState({ status: 'ready', players: response.data.data })
       )
       .catch(response => {
         if (response instanceof Error) {
           // Something happened in setting up the request that triggered an Error
-          console.log('Error', response.message)
+          this.setState({ status: 'error', message: response.message })
         } else {
           // The request was made, but the server responded with a status code
           // that falls out of the range of 2xx
-          console.log(response.data)
-          console.log(response.status)
-          console.log(response.headers)
-          console.log(response.config)
+          this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
         }
-        this.setState({ status: 'error', message: response.message })
       })
-
-    // const players = [
-    //   { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
-    //   { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
-    // ]
   }
 
   onSelect(item, menu) {
@@ -98,7 +89,6 @@ class LeaderboardView extends Component {
   }
 
   render() {
-
     switch(this.state.status) {
       case 'pending':
         return null
@@ -111,7 +101,7 @@ class LeaderboardView extends Component {
 
   view() {
 
-    const { currentPage, forceReset, isReady, players } = this.state
+    const { currentPage, forceReset, players } = this.state
 
     const { pageSize } = this.props,
       pagePlayers = this.getPlayers(pageSize, currentPage, players),

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
+import Api from '../lib/api'
 import { Keys } from '../lib/key-handler'
 import PlayerMenu from './player-menu'
 
@@ -8,7 +9,7 @@ class ChoosePlayerView extends Component {
   constructor() {
     super()
     this.state = {
-      isReady: false,
+      status: 'pending',
       players: [],
       player1: null,
       player2: null
@@ -17,12 +18,20 @@ class ChoosePlayerView extends Component {
 
   componentDidMount() {
 
-    const players = [
-      { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
-      { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
-    ]
-
-    this.setState({ isReady: true, players: players})
+    Api.get('players')
+      .then(response =>
+        this.setState({ status: 'ready', players: response.data.data })
+      )
+      .catch(response => {
+        if (response instanceof Error) {
+          // Something happened in setting up the request that triggered an Error
+          this.setState({ status: 'error', message: response.message })
+        } else {
+          // The request was made, but the server responded with a status code
+          // that falls out of the range of 2xx
+          this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+        }
+      })
   }
 
   componentWillUpdate(_, nextState) {
@@ -45,10 +54,19 @@ class ChoosePlayerView extends Component {
   }
 
   render() {
+    switch(this.state.status) {
+      case 'pending':
+        return null
+      case 'error':
+        return <ErrorPage message={this.state.message} />
+      default:
+        return this.view()
+    }
+  }
 
-    const { isReady, players } = this.state
+  view() {
 
-    if (!isReady) return null
+    const { players } = this.state
 
     const menuItems = players.map(player => {
       return { title: player.name, player: player }
