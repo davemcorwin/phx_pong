@@ -17,8 +17,9 @@ defmodule PhxPong.Router do
     pipe_through :api
 
     resources "/players", UserController, only: [:index]
+    resources "/games", GameController, only: [:create, :index, :show, :update]
   end
-  
+
   scope "/", PhxPong do
     pipe_through :browser # Use the default browser stack
 

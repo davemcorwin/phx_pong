@@ -8,12 +8,18 @@ defmodule PhxPong.UserView do
     %{data: render_many(users, PhxPong.UserView, "user.json")}
   end
 
+  def render("show.json", %{user: user}) do
+    %{data: render("user.json", %{user: user})}
+  end
+
   def render("user.json", %{user: user}) do
-    %{ id: user.id,
+    %{
+      id: user.id,
       name: user.name,
       taunt: user.taunt,
       wins: user.wins,
-      losses: user.losses }
+      losses: user.losses
+    }
   end
 
   def win_pct(%User{wins: 0}), do: 0

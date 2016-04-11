@@ -51,7 +51,9 @@ gen_game = fn(_idx) ->
     details: %{
       points:       points,
       first_server: p1.id,
-      status:       0
+      player1Score: p1_points,
+      player2Score: p2_points,
+      status:       "complete"
     }
   })
 

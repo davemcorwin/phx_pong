@@ -18,5 +18,5 @@ export function inProgress(game) {
 }
 
 export function isOver(game) {
-  return game.details.status === 'over'
+  return game.details.status === 'complete'
 }

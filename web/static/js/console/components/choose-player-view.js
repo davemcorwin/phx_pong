@@ -3,6 +3,7 @@ import Page from 'page'
 import Api from '../lib/api'
 import { Keys } from '../lib/key-handler'
 import PlayerMenu from './player-menu'
+import ErrorPage from './error-page'
 
 class ChoosePlayerView extends Component {
 
@@ -36,12 +37,35 @@ class ChoosePlayerView extends Component {
 
   componentWillUpdate(_, nextState) {
 
-    const { player1, player2 } = nextState
+    const { player1, player2, status } = nextState
 
-    if (player1 && player2) {
-      //create a new game then
-      const id = 1
-      Page(`/game/${id}`)
+    if (status !== 'error' && player1 && player2) {
+      Api.post('games', {
+        game: {
+          p1_id: player1.id,
+          p2_id: player2.id,
+          details: {
+            points:       [],
+            first_server: null,
+            player1Score: 0,
+            player2Score: 0,
+            status:       'pending'
+          }
+        }
+      })
+      .then(response =>
+        Page(`/game/${response.data.game.id}`)
+      )
+      .catch(response => {
+        if (response instanceof Error) {
+          // Something happened in setting up the request that triggered an Error
+          this.setState({ status: 'error', message: response.message })
+        } else {
+          // The request was made, but the server responded with a status code
+          // that falls out of the range of 2xx
+          this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+        }
+      })
     }
   }
 
