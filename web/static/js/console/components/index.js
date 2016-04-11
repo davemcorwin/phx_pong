@@ -1,5 +1,6 @@
 export { default as ChoosePlayerView } from './choose-player-view'
 export { default as EndGameMessage } from './end-game-message'
+export { default as ErrorPage } from './error-page'
 export { default as GameView } from './game-view'
 export { default as LeaderboardView } from './leaderboard-view'
 export { default as Leaderboard } from './leaderboard'

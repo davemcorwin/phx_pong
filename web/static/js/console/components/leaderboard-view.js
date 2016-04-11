@@ -1,6 +1,8 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 import { Keys } from '../lib/key-handler'
+import Api from '../lib/api'
+import ErrorPage from './error-page'
 import Leaderboard from './leaderboard'
 import Menu from './menu'
 
@@ -19,19 +21,36 @@ class LeaderboardView extends Component {
     this.state = {
       currentPage: 0,
       forceReset: false,
-      isReady: false,
+      status: 'pending',
       players: []
     }
   }
 
   componentDidMount() {
 
-    const players = [
-      { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
-      { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
-    ]
+    Api.get('players')
+      .then(response =>
+        this.setState({ status: 'ready', players: response.data })
+      )
+      .catch(response => {
+        if (response instanceof Error) {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', response.message)
+        } else {
+          // The request was made, but the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(response.data)
+          console.log(response.status)
+          console.log(response.headers)
+          console.log(response.config)
+        }
+        this.setState({ status: 'error', message: response.message })
+      })
 
-    this.setState({ isReady: true, players: players })
+    // const players = [
+    //   { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
+    //   { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3}
+    // ]
   }
 
   onSelect(item, menu) {
@@ -80,9 +99,19 @@ class LeaderboardView extends Component {
 
   render() {
 
-    const { currentPage, forceReset, isReady, players } = this.state
+    switch(this.state.status) {
+      case 'pending':
+        return null
+      case 'error':
+        return <ErrorPage message={this.state.message} />
+      default:
+        return this.view()
+    }
+  }
 
-    if (!isReady) return null
+  view() {
+
+    const { currentPage, forceReset, isReady, players } = this.state
 
     const { pageSize } = this.props,
       pagePlayers = this.getPlayers(pageSize, currentPage, players),
