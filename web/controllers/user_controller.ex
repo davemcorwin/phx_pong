@@ -6,7 +6,7 @@ defmodule PhxPong.UserController do
   plug :scrub_params, "user" when action in [:create, :update]
 
   def index(conn, _params) do
-    users = Repo.all(User) |> Repo.preload(:p1_games) |> Repo.preload(:p2_games)
+    users = Repo.all(User) |> Repo.preload(:games)
     render(conn, :index, users: users)
   end
 
@@ -30,7 +30,7 @@ defmodule PhxPong.UserController do
 
   def show(conn, %{"id" => id}) do
     users = Repo.all(User)
-    user = Repo.get!(User, id) |> Repo.preload(:p1_games) |> Repo.preload(:p2_games)
+    user = Repo.get!(User, id) |> Repo.preload(:games)
     render(conn, "show.html", user: user, users: users)
   end
 
@@ -56,11 +56,7 @@ defmodule PhxPong.UserController do
 
   def delete(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
     Repo.delete!(user)
-
     conn
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: user_path(conn, :index))

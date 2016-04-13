@@ -41,17 +41,8 @@ class ChoosePlayerView extends Component {
 
     if (status !== 'error' && player1 && player2) {
       Api.post('games', {
-        game: {
-          p1_id: player1.id,
-          p2_id: player2.id,
-          details: {
-            points:       [],
-            first_server: null,
-            player1Score: 0,
-            player2Score: 0,
-            status:       'pending'
-          }
-        }
+        players: [player1.id, player2.id],
+        game: { status: 'pending' }
       })
       .then(response =>
         Page(`/game/${response.data.game.id}`)

@@ -21,8 +21,8 @@
       <td><%= user.wins %> - <%= user.losses %></td>
       <td><%= user.losses + user.wins%></td>
       <td><%= win_pct user %>%</td>
-      <td><%#= last_10 user %></td>
-      <td><%#= user.losses + user.wins%></td>
+      <td><%= last_10 user %></td>
+      <td><%= streak user %></td>
       <td>
         <%= link "Details", to: user_path(@conn, :show, user) %>
       </td>

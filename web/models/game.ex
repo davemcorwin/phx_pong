@@ -1,17 +1,23 @@
 defmodule PhxPong.Game do
   use PhxPong.Web, :model
 
+  alias PhxPong.Player
   alias PhxPong.User
 
   schema "games" do
-    belongs_to :p1, User
-    belongs_to :p2, User
-    field :details, :map
+    field :status,  :string # ~w(pending in-progress complete)
+    field :details, :map    # %{points: [<player_id>, <player_id>, ...], first_server: <player_id>, winner: <player_id> }
+
+    has_many :players, Player
+    has_many :users, through: [:players, :user]
+
     timestamps
   end
 
-  @required_fields ~w(details)
+  @required_fields ~w(status details)
   @optional_fields ~w()
+
+  @statuses ~w(pending in-progress complete)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -22,7 +28,19 @@ defmodule PhxPong.Game do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
-    # |> put_assoc(:p1, required: true)
-    # |> put_assoc(:p2, required: true)
+    |> set_default_values
+    |> validate_subset(:status, @statuses)
+  end
+
+  defp set_default_values(changeset) do
+    case fetch_field(changeset, :status) do
+      {_, nil} -> changeset = put_change(changeset, :status, "pending")
+      _ -> changeset
+    end
+
+    case fetch_field(changeset, :details) do
+      {_, nil} -> changeset = put_change(changeset, :details, %{points: []})
+      _ -> changeset
+    end
   end
 end

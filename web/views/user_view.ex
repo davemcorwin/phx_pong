@@ -2,7 +2,6 @@ defmodule PhxPong.UserView do
   use PhxPong.Web, :view
 
   alias PhxPong.User
-  alias PhxPong.Game
 
   def render("index.json", %{users: users}) do
     %{data: render_many(users, PhxPong.UserView, "user.json")}
@@ -18,7 +17,8 @@ defmodule PhxPong.UserView do
       name: user.name,
       taunt: user.taunt,
       wins: user.wins,
-      losses: user.losses
+      losses: user.losses,
+      details: user.details
     }
   end
 
@@ -41,42 +41,49 @@ defmodule PhxPong.UserView do
     "#{n}#{(Enum.at(s, rem((v-20), 10)) || Enum.at(s, v) || Enum.at(s, 0))}"
   end
 
-  # def last_10(user) do
-  #   results = Enum.sort (user.p1_games ++ user.p2_games), fn (a,b) -> a.updated_at > b.updated_at end
-  #     |> Enum.take(10)
-  #     |> Enum.group_by(fn game -> result(score(game, user)) end)
-  #
-  #     results
-    # "#{Enum.length results.W} - #{Enum.length results.L}"
-  # end
+  def last_10(user) do
+    user.details["log"]
+      |> Enum.take(10)
+      |> Enum.partition(fn result -> result == "W" end)
+      |> Tuple.to_list
+      |> Enum.map(&length/1)
+      |> Enum.join(" - ")
+  end
+
+  def streak(user) do
+    log = user.details["log"]
+    streak_length = log
+      |> Enum.reverse
+      |> Enum.reduce_while(0, fn result, acc ->
+        if result == List.last(log), do: {:cont, acc + 1}, else: {:halt, acc}
+      end)
+    "#{streak_length} #{List.last(log)}"
+  end
 
   def games(user, users) do
-    Enum.map (user.p1_games ++ user.p2_games), fn game ->
-      s = score(game, user)
+    Enum.map user.games, fn game ->
+
+      opponent = Enum.find(users, fn user ->
+        user.id == Enum.find(game.players, fn player ->
+          player.id != user.id end).user_id
+        end)
+      # s = score(game, user)
       %{
         date: Ecto.DateTime.to_date(game.inserted_at),
-        opponent: opponent(user, game, users),
-        result: result(s),
-        score: Enum.join(s, " - "),
-        status: game.details["status"]
+        opponent: opponent.name,
+        result: "",#if game.winner == user.id,  result(s),
+        score: "",#Enum.join(s, " - "),
+        status: game.status
       } end
   end
-
-  def opponent(%User{id: id}, game = %Game{p1_id: id}, users) do
-    (Enum.find users, fn(user) -> user.id == game.p2_id end).name
-  end
-
-  def opponent(%User{id: id}, game = %Game{p2_id: id}, users) do
-    (Enum.find users, fn(user) -> user.id == game.p2_id end).name
-  end
-
-  def score(game, user) do
-    Enum.partition(game.details["points"], fn(id) -> id == user.id end)
-      |> Tuple.to_list
-      |> Enum.map(fn(points) -> length(points) end)
-  end
-
-  def result([a, b]) when a > b, do: "W"
-  def result([a, b]) when b > a, do: "L"
-  def result([a, b]), do: "?"
+  #
+  # def score(game, user) do
+  #   Enum.partition(game.details["points"], fn(id) -> id == user.id end)
+  #     |> Tuple.to_list
+  #     |> Enum.map(fn(points) -> length(points) end)
+  # end
+  #
+  # def result([a, b]) when a > b, do: "W"
+  # def result([a, b]) when b > a, do: "L"
+  # def result([a, b]), do: "?"
 end

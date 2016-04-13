@@ -2,6 +2,7 @@ defmodule PhxPong.User do
   use PhxPong.Web, :model
 
   alias PhxPong.Game
+  alias PhxPong.Player
 
   schema "users" do
     field :name,   :string
@@ -9,26 +10,35 @@ defmodule PhxPong.User do
     field :taunt,  :string
     field :wins,   :integer, default: 0
     field :losses, :integer, default: 0
+    field :details, :map  # %{log: ["W", "L", ...]}
 
-    has_many :p1_games, Game, foreign_key: :p1_id
-    has_many :p2_games, Game, foreign_key: :p2_id
+    has_many :players, Player
+    has_many :games, through: [:players, :game]
 
     timestamps
   end
 
-  @required_fields ~w(name email wins losses)
+  @required_fields ~w(name email wins losses details)
   @optional_fields ~w(taunt)
 
-  @doc """
-  Creates a changeset based on the `model` and `params`.
+  def game_complete(model, :win) do
+    model
+    |> changeset(%{})
+    |> put_change(:wins, model.wins + 1)
+    |> put_change(:details, Map.update!(model.details, "log", &(&1 ++ ["W"])))
+  end
 
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
-  """
+  def game_complete(model, :lose) do
+    model
+    |> changeset(%{})
+    |> put_change(:losses, model.losses + 1)
+    |> put_change(:details, Map.update!(model.details, "log", &(&1 ++ ["L"])))
+  end
+
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
-    |> set_default_values    
+    |> set_default_values
     |> unique_constraint(:email)
     |> unique_constraint(:name)
     |> validate_length(:name, min: 3)
@@ -45,6 +55,11 @@ defmodule PhxPong.User do
 
     case fetch_field(changeset, :losses) do
       {_, nil} -> changeset = put_change(changeset, :losses, 0)
+      _ -> changeset
+    end
+
+    case fetch_field(changeset, :details) do
+      {_, nil} -> changeset = put_change(changeset, :details, %{streak: "", last_10: %{ wins: 0, losses: 0 }})
       _ -> changeset
     end
   end

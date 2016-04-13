@@ -11,9 +11,11 @@
 # and so on) as they will fail if something goes wrong.
 
 alias PhxPong.Repo
-alias PhxPong.User
 alias PhxPong.Game
+alias PhxPong.Player
+alias PhxPong.User
 
+Repo.delete_all(Player)
 Repo.delete_all(Game)
 Repo.delete_all(User)
 
@@ -22,7 +24,8 @@ dave = Repo.insert!(%User{
   email: "dave@launchpadlab.com",
   taunt: "BOOMshakalaka",
   wins: 0,
-  losses: 0
+  losses: 0,
+  details: %{"log" => []}
 })
 
 ryan = Repo.insert!(%User{
@@ -30,13 +33,14 @@ ryan = Repo.insert!(%User{
   email: "ryan@launchpadlab.com",
   taunt: "Jalapeeno",
   wins: 0,
-  losses: 0
+  losses: 0,
+  details: %{"log" => []}
 })
 
 users = [dave, ryan]
 range = 0..21
 
-gen_game = fn(_idx) ->
+gen_game = fn(_) ->
   first = Enum.random(users).id
   {[p1], [p2]} = Enum.partition(users, fn(user) -> user.id == first end)
   p1_points = Enum.random range
@@ -44,30 +48,31 @@ gen_game = fn(_idx) ->
   points =
     Enum.map(1..p1_points, fn(_idx) -> p1.id end) ++ Enum.map(1..p2_points, fn(_idx) -> p2.id end)
     |> Enum.shuffle
+  winner = if p1_points > p2_points, do: p1.id, else: p2.id
 
-  Repo.insert!(%Game{
-    p1_id:   p1.id,
-    p2_id:   p2.id,
+  game = Repo.insert!(%Game{
+    status: "complete",
     details: %{
       points:       points,
       first_server: p1.id,
-      player1Score: p1_points,
-      player2Score: p2_points,
-      status:       "complete"
+      winner:       winner
     }
   })
 
-  if p1.id == dave.id && p1_points > p2_points, do: 1, else: 0
+  Repo.insert!(%Player{
+    user_id: p1.id,
+    game_id: game.id,
+    score: p1_points
+  })
+
+  Repo.insert!(%Player{
+    user_id: p2.id,
+    game_id: game.id,
+    score: p2_points
+  })
+
+  Repo.update!(User.game_complete(Repo.get(User, dave.id), (if winner == dave.id, do: :win, else: :lose)))
+  Repo.update!(User.game_complete(Repo.get(User, ryan.id), (if winner == ryan.id, do: :win, else: :lose)))
 end
 
-dave_wins = Enum.map(range, gen_game) |> Enum.sum
-
-Repo.update!(User.changeset(dave, %{
-  wins: dave_wins,
-  losses: 22 - dave_wins
-}))
-
-Repo.update!(User.changeset(ryan, %{
-  losses: dave_wins,
-  wins: 22 - dave_wins
-}))
+Enum.each range, gen_game
