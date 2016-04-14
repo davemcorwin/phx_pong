@@ -18,8 +18,8 @@ defmodule PhxPong.User do
     timestamps
   end
 
-  @required_fields ~w(name email wins losses details)
-  @optional_fields ~w(taunt)
+  @required_fields ~w(name email wins losses)
+  @optional_fields ~w(taunt details)
 
   def game_complete(model, :win) do
     model
@@ -59,7 +59,7 @@ defmodule PhxPong.User do
     end
 
     case fetch_field(changeset, :details) do
-      {_, nil} -> changeset = put_change(changeset, :details, %{streak: "", last_10: %{ wins: 0, losses: 0 }})
+      {_, nil} -> changeset = put_change(changeset, :details, %{"log" => []})
       _ -> changeset
     end
   end

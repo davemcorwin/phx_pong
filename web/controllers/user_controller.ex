@@ -1,6 +1,6 @@
 defmodule PhxPong.UserController do
   use PhxPong.Web, :controller
-
+  import IEx
   alias PhxPong.User
 
   plug :scrub_params, "user" when action in [:create, :update]
@@ -24,13 +24,14 @@ defmodule PhxPong.UserController do
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
+        IEx.pry
         render(conn, "new.html", changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     users = Repo.all(User)
-    user = Repo.get!(User, id) |> Repo.preload(:games)
+    user = Repo.get!(User, id) |> Repo.preload(games: :players)
     render(conn, "show.html", user: user, users: users)
   end
 

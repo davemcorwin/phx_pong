@@ -15,13 +15,13 @@
     </tr>
   </thead>
   <tbody>
-    <%= for game <- games(@user, @users) do %>
+    <%= for game <- @user.games do %>
       <tr>
-        <td><%= game.date %></td>
-        <td>vs <%= game.opponent %></td>
-        <td><%= game.result %></td>
-        <td><%= game.score %></td>
-        <td>Final<%#= game.status %></td>
+        <td><%= Ecto.DateTime.to_date(game.inserted_at) %></td>
+        <td>vs <%= opponent(game, @user, @users) %></td>
+        <td><%= result score(game, @user) %></td>
+        <td><%= Enum.join score(game, @user), " - " %></td>
+        <td><%= status game.status %></td>
       </tr>
     <% end %>
   </tbody>

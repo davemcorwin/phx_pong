@@ -19,7 +19,7 @@
           <div class="container">
             <ul class="navbar-list">
               <li class="navbar-item">
-                <%= link "Dashboard", to: user_path(@conn, :index), class: "navbar-link" %>
+                <%= link "Dashboard", to: dashboard_path(@conn, :index), class: "navbar-link" %>
               </li>
             </ul>
           </div>

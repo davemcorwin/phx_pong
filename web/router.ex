@@ -16,7 +16,7 @@ defmodule PhxPong.Router do
   scope "/api", PhxPong do
     pipe_through :api
 
-    resources "/players", UserController, only: [:index]
+    resources "/players", UserController, only: [:index], as: "player"
     resources "/games", GameController, only: [:create, :index, :show, :update]
   end
 
@@ -24,9 +24,8 @@ defmodule PhxPong.Router do
     pipe_through :browser # Use the default browser stack
 
     resources "/users", UserController
-    get "/dashboard", UserController, :index
+    get "/dashboard", UserController, :index, as: "dashboard"
 
     get "/*path", ConsoleController, :main_menu
   end
-
 end

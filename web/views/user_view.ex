@@ -1,6 +1,5 @@
 defmodule PhxPong.UserView do
   use PhxPong.Web, :view
-
   alias PhxPong.User
 
   def render("index.json", %{users: users}) do
@@ -60,30 +59,23 @@ defmodule PhxPong.UserView do
     "#{streak_length} #{List.last(log)}"
   end
 
-  def games(user, users) do
-    Enum.map user.games, fn game ->
-
-      opponent = Enum.find(users, fn user ->
-        user.id == Enum.find(game.players, fn player ->
-          player.id != user.id end).user_id
-        end)
-      # s = score(game, user)
-      %{
-        date: Ecto.DateTime.to_date(game.inserted_at),
-        opponent: opponent.name,
-        result: "",#if game.winner == user.id,  result(s),
-        score: "",#Enum.join(s, " - "),
-        status: game.status
-      } end
+  def opponent(game, user, users) do
+    (Enum.find users, fn _user ->
+      _user.id == Enum.find(game.players, &(&1.user_id != user.id)).user_id
+    end).name
   end
-  #
-  # def score(game, user) do
-  #   Enum.partition(game.details["points"], fn(id) -> id == user.id end)
-  #     |> Tuple.to_list
-  #     |> Enum.map(fn(points) -> length(points) end)
-  # end
-  #
-  # def result([a, b]) when a > b, do: "W"
-  # def result([a, b]) when b > a, do: "L"
-  # def result([a, b]), do: "?"
+
+  def score(game, user) do
+    game.details["points"]
+      |> Enum.group_by(&(&1 == user.id))
+      |> Map.values
+      |> Enum.map(fn points -> Enum.count points end)
+  end
+
+  def result([a, b]) when a > b, do: "W"
+  def result([a, b]) when b > a, do: "L"
+  def result([a, b]), do: "?"
+
+  def status("complete"), do: "Final"
+  def status(other), do: other
 end
