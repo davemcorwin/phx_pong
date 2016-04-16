@@ -18,8 +18,13 @@ defmodule PhxPong.User do
     timestamps
   end
 
-  @required_fields ~w(name email wins losses)
-  @optional_fields ~w(taunt details)
+  @required_fields ~w(name email wins losses details)
+  @optional_fields ~w(taunt)
+  @default_values [
+    wins: 0,
+    losses: 0,
+    details: %{"log" => []}
+  ]
 
   def game_complete(model, :win) do
     model
@@ -37,30 +42,18 @@ defmodule PhxPong.User do
 
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
-    |> set_default_values
-    |> unique_constraint(:email)
-    |> unique_constraint(:name)
+    |> cast(set_defaults(params), @required_fields, @optional_fields)
     |> validate_length(:name, min: 3)
     |> validate_format(:email, ~r/@/)
     |> validate_number(:wins, greater_than_or_equal_to: 0)
     |> validate_number(:losses, greater_than_or_equal_to: 0)
+    |> unique_constraint(:email)
+    |> unique_constraint(:name)
   end
 
-  defp set_default_values(changeset) do
-    case fetch_field(changeset, :wins) do
-      {_, nil} -> changeset = put_change(changeset, :wins, 0)
-      _ -> changeset
-    end
-
-    case fetch_field(changeset, :losses) do
-      {_, nil} -> changeset = put_change(changeset, :losses, 0)
-      _ -> changeset
-    end
-
-    case fetch_field(changeset, :details) do
-      {_, nil} -> changeset = put_change(changeset, :details, %{"log" => []})
-      _ -> changeset
-    end
+  defp set_defaults(params) do
+    Enum.reduce(@default_values, params, fn dflt, acc ->
+      Map.put_new(acc, elem(dflt,0), elem(dflt,1))
+    end)
   end
 end
