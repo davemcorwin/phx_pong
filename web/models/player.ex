@@ -11,7 +11,7 @@ defmodule PhxPong.Player do
     field :score, :integer, default: 0
   end
 
-  @required_fields ~w(user_id game_id score)
+  @required_fields ~w(score)
   @optional_fields ~w()
 
   @doc """
@@ -23,9 +23,17 @@ defmodule PhxPong.Player do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> set_default_values
     |> assoc_constraint(:user)
     |> assoc_constraint(:game)
     |> unique_constraint(:game_id, name: :players_user_game_index)
     |> validate_number(:score, greater_than_or_equal_to: 0)
+  end
+
+  defp set_default_values(changeset) do
+    case fetch_field(changeset, :score) do
+      {_, nil} -> changeset = put_change(changeset, :score, 0)
+      _ -> changeset
+    end
   end
 end

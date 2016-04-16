@@ -2,7 +2,6 @@ defmodule PhxPong.GameController do
   use PhxPong.Web, :controller
 
   alias PhxPong.Game
-  alias PhxPong.Player
 
   plug :scrub_params, "game" when action in [:create, :update]
 
@@ -11,16 +10,16 @@ defmodule PhxPong.GameController do
     render(conn, :index, games: games)
   end
 
-  def create(conn, params) do
-    changeset = Game.changeset(%Game{}, %{"game" => game} = params)
+  def create(conn, %{"game" => game}) do
+    changeset = Game.changeset(%Game{}, game)
 
     case Repo.insert(changeset) do
       {:ok, game} ->
-        Repo.insert!(Player.changeset(%Player{}, %{game_id: game.id}, Enum.at(params.players, 0)))
-        Repo.insert!(Player.changeset(%Player{}, %{game_id: game.id}, Enum.at(params.players, 1)))
         render(conn, :show, game: game)
       {:error, changeset} ->
-        render(conn, :error, changeset: changeset)
+        conn
+        |> put_status(:conflict)
+        |> render(:error, changeset: changeset)
     end
   end
 

@@ -41,8 +41,13 @@ class ChoosePlayerView extends Component {
 
     if (status !== 'error' && player1 && player2) {
       Api.post('games', {
-        players: [player1.id, player2.id],
-        game: { status: 'pending' }
+        game: {
+          players: [
+            { user_id: player1.id, score: 0 },
+            { user_id: player2.id, score: 0 }
+          ],
+          status: 'pending'
+        }
       })
       .then(response =>
         Page(`/game/${response.data.game.id}`)
@@ -54,7 +59,7 @@ class ChoosePlayerView extends Component {
         } else {
           // The request was made, but the server responded with a status code
           // that falls out of the range of 2xx
-          this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+          this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
         }
       })
     }

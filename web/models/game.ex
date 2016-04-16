@@ -14,8 +14,8 @@ defmodule PhxPong.Game do
     timestamps
   end
 
-  @required_fields ~w(status details)
-  @optional_fields ~w()
+  @required_fields ~w(status)
+  @optional_fields ~w(details)
 
   @statuses ~w(pending in-progress complete)
 
@@ -29,7 +29,8 @@ defmodule PhxPong.Game do
     model
     |> cast(params, @required_fields, @optional_fields)
     |> set_default_values
-    |> validate_subset(:status, @statuses)
+    |> validate_inclusion(:status, @statuses)
+    |> cast_assoc(:players, required: true)
   end
 
   defp set_default_values(changeset) do
