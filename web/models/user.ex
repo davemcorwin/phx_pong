@@ -4,18 +4,24 @@ defmodule PhxPong.User do
   alias PhxPong.Game
   alias PhxPong.Player
 
-  schema "users" do
-    field :name,   :string
-    field :email,  :string
-    field :taunt,  :string
-    field :wins,   :integer, default: 0
-    field :losses, :integer, default: 0
-    field :details, :map, default: %{
+  @default_values = %{
+    wins: 0,
+    losses: 0,
+    details: %{
       "log" => [],
       "win_pct" => 0,
       "last_10" => "",
       "streak" => ""
     }
+  }
+
+  schema "users" do
+    field :name,    :string
+    field :email,   :string
+    field :taunt,   :string
+    field :wins,    :integer, default: @default_values.wins
+    field :losses,  :integer, default: @default_values.losses
+    field :details, :map, default: @default_values.details
 
     has_many :players, Player
     has_many :games, through: [:players, :game]
