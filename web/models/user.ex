@@ -68,10 +68,8 @@ defmodule PhxPong.User do
       get_field(changeset, :wins),
       get_field(changeset, :losses)
     } do
-      {_, 0} ->
-        changeset
-      {0, _} ->
-        changeset
+      {_, 0} -> changeset
+      {0, _} -> changeset
       {wins, losses} ->
         win_pct = wins / (wins + losses)
         put_change(changeset, :details, %{ get_field(changeset, :details) | "win_pct" => win_pct })

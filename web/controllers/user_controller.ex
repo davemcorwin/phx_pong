@@ -1,6 +1,5 @@
 defmodule PhxPong.UserController do
   use PhxPong.Web, :controller
-  import IEx
   alias PhxPong.User
 
   plug :scrub_params, "user" when action in [:create, :update]
@@ -24,8 +23,9 @@ defmodule PhxPong.UserController do
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
-        IEx.pry
-        render(conn, "new.html", changeset: changeset)
+        conn
+        |> put_status(:conflict)
+        |> render("new.html", changeset: changeset)
     end
   end
 
@@ -51,7 +51,9 @@ defmodule PhxPong.UserController do
         |> put_flash(:info, "User updated successfully.")
         |> redirect(to: user_path(conn, :show, user))
       {:error, changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset)
+        conn
+        |> put_status(:conflict)
+        |> render("edit.html", user: user, changeset: changeset)
     end
   end
 
