@@ -21,10 +21,8 @@ defmodule PhxPong.UserView do
     }
   end
 
-  def win_pct(%User{wins: 0}), do: 0
-  def win_pct(%User{losses: 0}), do: 0
   def win_pct(user) do
-    100 * (user.wins / (user.wins + user.losses))
+    100 * user.win_pct
     |> Float.round(0)
     |> Float.to_string([decimals: 0])
   end

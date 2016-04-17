@@ -4,7 +4,7 @@ defmodule PhxPong.User do
   alias PhxPong.Game
   alias PhxPong.Player
 
-  @default_values = %{
+  @defaults %{
     wins: 0,
     losses: 0,
     details: %{
@@ -19,9 +19,9 @@ defmodule PhxPong.User do
     field :name,    :string
     field :email,   :string
     field :taunt,   :string
-    field :wins,    :integer, default: @default_values.wins
-    field :losses,  :integer, default: @default_values.losses
-    field :details, :map, default: @default_values.details
+    field :wins,    :integer, default: @defaults.wins
+    field :losses,  :integer, default: @defaults.losses
+    field :details, :map,     default: @defaults.details
 
     has_many :players, Player
     has_many :games, through: [:players, :game]
