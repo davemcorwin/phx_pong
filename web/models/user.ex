@@ -10,7 +10,12 @@ defmodule PhxPong.User do
     field :taunt,  :string
     field :wins,   :integer, default: 0
     field :losses, :integer, default: 0
-    field :details, :map  # %{log: ["W", "L", ...]}
+    field :details, :map, default: %{
+      "log" => [],
+      "win_pct" => 0,
+      "last_10" => "",
+      "streak" => ""
+    }
 
     has_many :players, Player
     has_many :games, through: [:players, :game]
@@ -20,29 +25,26 @@ defmodule PhxPong.User do
 
   @required_fields ~w(name email wins losses details)
   @optional_fields ~w(taunt)
-  @default_values [
-    wins: 0,
-    losses: 0,
-    details: %{"log" => []}
-  ]
 
   def game_complete(model, :win) do
     model
     |> changeset(%{})
     |> put_change(:wins, model.wins + 1)
-    |> put_change(:details, Map.update!(model.details, "log", &(&1 ++ ["W"])))
+    |> update_log("W")
+    |> update_win_pct
   end
 
   def game_complete(model, :lose) do
     model
     |> changeset(%{})
     |> put_change(:losses, model.losses + 1)
-    |> put_change(:details, Map.update!(model.details, "log", &(&1 ++ ["L"])))
+    |> update_log("L")
+    |> update_win_pct
   end
 
   def changeset(model, params \\ :empty) do
     model
-    |> cast(set_defaults(params), @required_fields, @optional_fields)
+    |> cast(params, @required_fields, @optional_fields)
     |> validate_length(:name, min: 3)
     |> validate_format(:email, ~r/@/)
     |> validate_number(:wins, greater_than_or_equal_to: 0)
@@ -51,9 +53,22 @@ defmodule PhxPong.User do
     |> unique_constraint(:name)
   end
 
-  defp set_defaults(params) do
-    Enum.reduce(@default_values, params, fn dflt, acc ->
-      Map.put_new(acc, elem(dflt,0), elem(dflt,1))
-    end)
+  defp update_log(changeset, result) do
+    put_map_change(changeset, :details, "log", &(&1 ++ [result]))
+  end
+
+  defp update_win_pct(changeset) do
+    case {
+      get_field(changeset, :wins),
+      get_field(changeset, :losses)
+    } do
+      {_, 0} ->
+        changeset
+      {0, _} ->
+        changeset
+      {wins, losses} ->
+        win_pct = wins / (wins + losses)
+        put_change(changeset, :details, %{ get_field(changeset, :details) | "win_pct" => win_pct })
+    end
   end
 end

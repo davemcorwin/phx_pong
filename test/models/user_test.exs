@@ -68,6 +68,18 @@ defmodule PhxPong.UserTest do
     assert logged_results(get_change(changeset, :details), "W") == logged_results(user.details, "W") + 1
   end
 
+  test "game_complete(model, :win) updates win pct" do
+    user = %User{
+      name: "a name",
+      email: "dave@email.com",
+      wins: 2,
+      losses: 2
+    }
+
+    changeset = User.game_complete(user, :win)
+    assert get_change(changeset, :details) |> Map.get("win_pct") == 3/5
+  end
+
   test "game_complete(model, :lose) increments losses" do
     user = %User{
       name: "a name",
@@ -90,6 +102,18 @@ defmodule PhxPong.UserTest do
 
     changeset = User.game_complete(user, :lose)
     assert logged_results(get_change(changeset, :details), "L") == logged_results(user.details, "L") + 1
+  end
+
+  test "game_complete(model, :lose) updates win pct" do
+    user = %User{
+      name: "a name",
+      email: "dave@email.com",
+      wins: 2,
+      losses: 2
+    }
+
+    changeset = User.game_complete(user, :lose)
+    assert get_change(changeset, :details) |> Map.get("win_pct") == 2/5
   end
 
   defp logged_results(details, result) do
