@@ -22,9 +22,8 @@ defmodule PhxPong.UserView do
   end
 
   def win_pct(user) do
-    100 * user.win_pct
-    |> Float.round(0)
-    |> Float.to_string([decimals: 0])
+    user.details["win_pct"]
+    |> Float.to_string([decimals: 3])
   end
 
   def rank(user, users) do

@@ -43,8 +43,8 @@ class ChoosePlayerView extends Component {
       Api.post('games', {
         game: {
           players: [
-            { user_id: player1.id, score: 0 },
-            { user_id: player2.id, score: 0 }
+            { user_id: player1.id },
+            { user_id: player2.id }
           ],
           status: 'pending'
         }

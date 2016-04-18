@@ -26,11 +26,15 @@ defmodule PhxPong.GameView do
   end
 
   def render("game.json", %{game: game}) do
+    players = render_many(game.players, PhxPong.PlayerView, "player.json")
+
     %{
       id: game.id,
       status: game.status,
-      players: [],#render_many(game.players, PhxPong.PlayerView, "player.json"),
-      details: game.details
+      players: players,
+      player1: elem(players,0),
+      player2: elem(players,1)
     }
+    |> Map.merge(game.details)
   end
 end

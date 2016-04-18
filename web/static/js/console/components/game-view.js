@@ -28,28 +28,11 @@ class GameView extends Component {
       )
       .catch(response => {
         if (response instanceof Error) {
-          // Something happened in setting up the request that triggered an Error
           this.setState({ status: 'error', message: response.message })
         } else {
-          // The request was made, but the server responded with a status code
-          // that falls out of the range of 2xx
           this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
         }
       })
-
-    // const game = {
-    //   id: 1,
-    //   player1: { id: 1, name: 'Dave', taunt: 'mUahahaha', wins: 4, losses: 0},
-    //   player2: { id: 2, name: 'Ryan', taunt: 'old', wins: 1, losses: 3},
-    //   player1Score: 12,
-    //   player2Score: 15,
-    //   details: {
-    //     points:       [1,2,1,2,1,2,1,2,1,2],
-    //     first_server: 1,
-    //     status: 'in-progress'
-    //   },
-    //   winner: null
-    // }
 
     this.setState({ isReady: true, game: game })
 

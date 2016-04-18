@@ -40,5 +40,4 @@ defmodule PhxPong.Game do
     |> validate_inclusion(:status, @statuses)
     |> cast_assoc(:players, required: true)
   end
-
 end

@@ -1,8 +1,8 @@
 export function isServer(game, player) {
-  const totalScore = game.player1Score + game.player2Score,
+  const totalScore = game.players.reduce((player, acc) => acc + player.score, 0),
         modChanges = Math.floor(totalScore / 5) % 2
 
-  return modChanges === 0 ? player.id === game.details.first_server : player.id !== game.details.first_server
+  return modChanges === 0 ? players[0].id === game.details.first_server : players[0].id !== game.details.first_server
 }
 
 export function winner(game) {

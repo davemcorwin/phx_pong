@@ -34,39 +34,35 @@ ryan = Repo.insert!(%User{
 users = [dave, ryan]
 range = 0..21
 
-gen_game = fn(_) ->
-  first = Enum.random(users).id
-  {[p1], [p2]} = Enum.partition(users, fn(user) -> user.id == first end)
+Enum.each(range, fn(_) ->
+  [p1_id, p2_id] =
+    users
+    |> Enum.map(&(&1.id))
+    |> Enum.shuffle
+
   p1_points = Enum.random range
   p2_points = 21 - p1_points
   points =
-    Enum.map(1..p1_points, fn(_idx) -> p1.id end) ++ Enum.map(1..p2_points, fn(_idx) -> p2.id end)
+    Enum.map(1..p1_points, fn(_idx) -> p1_id end) ++ Enum.map(1..p2_points, fn(_idx) -> p2_id end)
     |> Enum.shuffle
-  winner = if p1_points > p2_points, do: p1.id, else: p2.id
+  winner = if p1_points > p2_points, do: p1_id, else: p2_id
 
-  game = Repo.insert!(%Game{
+  Repo.insert!(Game.changeset(%Game{}, %{
     status: "complete",
     details: %{
       points:       points,
-      first_server: p1.id,
+      first_server: p1_id,
       winner:       winner
-    }
-  })
-
-  Repo.insert!(%Player{
-    user_id: p1.id,
-    game_id: game.id,
-    score: p1_points
-  })
-
-  Repo.insert!(%Player{
-    user_id: p2.id,
-    game_id: game.id,
-    score: p2_points
-  })
+    },
+    players: [ %{
+      user_id: p1_id,
+      score: p1_points
+    }, %{
+      user_id: p2_id,
+      score: p2_points
+    }]
+  }))
 
   Repo.update!(User.game_complete(Repo.get(User, dave.id), (if winner == dave.id, do: :win, else: :lose)))
   Repo.update!(User.game_complete(Repo.get(User, ryan.id), (if winner == ryan.id, do: :win, else: :lose)))
-end
-
-Enum.each range, gen_game
+end)
