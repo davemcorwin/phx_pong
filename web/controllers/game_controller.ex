@@ -36,7 +36,9 @@ defmodule PhxPong.GameController do
       {:ok, game} ->
         render(conn, :show, game: game)
       {:error, changeset} ->
-        render(conn, :error, game: game, changeset: changeset)
+        conn
+        |> put_status(:conflict)
+        |> render(:error, game: game, changeset: changeset)
     end
   end
 end
