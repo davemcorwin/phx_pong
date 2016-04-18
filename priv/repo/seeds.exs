@@ -22,19 +22,13 @@ Repo.delete_all(User)
 dave = Repo.insert!(%User{
   name: "Dave",
   email: "dave@launchpadlab.com",
-  taunt: "BOOMshakalaka",
-  wins: 0,
-  losses: 0,
-  details: %{"log" => []}
+  taunt: "BOOMshakalaka"
 })
 
 ryan = Repo.insert!(%User{
   name: "Ryan",
   email: "ryan@launchpadlab.com",
-  taunt: "Jalapeeno",
-  wins: 0,
-  losses: 0,
-  details: %{"log" => []}
+  taunt: "Jalapeeno"
 })
 
 users = [dave, ryan]
