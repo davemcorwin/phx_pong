@@ -34,8 +34,6 @@ class GameView extends Component {
         }
       })
 
-    this.setState({ isReady: true, game: game })
-
     this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKeyTap)
   }
 
