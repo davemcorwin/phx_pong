@@ -10,8 +10,8 @@ defmodule PhxPong.GameController do
     render(conn, :index, games: games)
   end
 
-  def create(conn, %{"game" => game}) do
-    changeset = Game.changeset(%Game{}, game)
+  def create(conn, %{"game" => game_params}) do
+    changeset = Game.changeset(%Game{}, game_params)
 
     case Repo.insert(changeset) do
       {:ok, game} ->
@@ -29,7 +29,7 @@ defmodule PhxPong.GameController do
   end
 
   def update(conn, %{"id" => id, "game" => game_params}) do
-    game = Repo.get!(Game, id)
+    game = Repo.get!(Game, id) |> Repo.preload(:users)
     changeset = Game.changeset(game, game_params)
 
     case Repo.update(changeset) do

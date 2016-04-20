@@ -5,12 +5,15 @@ defmodule PhxPong.Repo.Migrations.CreatePong do
 
     # Users
     create table(:users) do
-      add :name,   :string
-      add :email,  :string
-      add :taunt,  :text,    default: "Taunt"
-      add :wins,   :integer, default: 0
-      add :losses, :integer, default: 0
-      add :details, :map
+      add :name,    :string
+      add :email,   :string
+      add :taunt,   :text,    default: "Taunt"
+      add :wins,    :integer, default: 0
+      add :losses,  :integer, default: 0
+      add :log,     {:array, :string}, default: []
+      add :win_pct, :float, default: 0
+      add :last_10, :string
+      add :streak,  :string
 
       timestamps
     end
@@ -20,8 +23,10 @@ defmodule PhxPong.Repo.Migrations.CreatePong do
 
     # Games
     create table(:games) do
-      add :status,  :string # ~w(pending in-progress complete)
-      add :details, :map    # %{"points" => [<player_id>, <player_id>, ...], first_server => <player_id> }
+      add :status,       :string
+      add :first_server, :integer
+      add :winner,       :integer
+      add :log,          {:array, :integer}, default: []
 
       timestamps
     end

@@ -7,12 +7,8 @@ defmodule PhxPong.User do
   @defaults %{
     wins: 0,
     losses: 0,
-    details: %{
-      "log" => [],
-      "win_pct" => 0,
-      "last_10" => "",
-      "streak" => ""
-    }
+    log: [],
+    win_pct: 0.0
   }
 
   schema "users" do
@@ -21,7 +17,10 @@ defmodule PhxPong.User do
     field :taunt,   :string
     field :wins,    :integer, default: @defaults.wins
     field :losses,  :integer, default: @defaults.losses
-    field :details, :map,     default: @defaults.details
+    field :log,     {:array, :string}, default: @defaults.log
+    field :win_pct, :float, default: @defaults.win_pct
+    field :last_10, :string
+    field :streak,  :string
 
     has_many :players, Player
     has_many :games, through: [:players, :game]
@@ -29,8 +28,8 @@ defmodule PhxPong.User do
     timestamps
   end
 
-  @required_fields ~w(name email wins losses details)
-  @optional_fields ~w(taunt)
+  @required_fields ~w(name email wins losses log win_pct)
+  @optional_fields ~w(taunt last_10 streak)
 
   def game_complete(model, :win) do
     model
@@ -55,12 +54,14 @@ defmodule PhxPong.User do
     |> validate_format(:email, ~r/@/)
     |> validate_number(:wins, greater_than_or_equal_to: 0)
     |> validate_number(:losses, greater_than_or_equal_to: 0)
+    |> validate_number(:win_pct, greater_than_or_equal_to: 0.0, less_than_or_equal_to: 1.0)
     |> unique_constraint(:email)
     |> unique_constraint(:name)
   end
 
   defp update_log(changeset, result) do
-    put_map_change(changeset, :details, "log", &(&1 ++ [result]))
+    log = get_field(changeset, :log)
+    put_change(changeset, :log, log ++ [result])
   end
 
   defp update_win_pct(changeset) do
@@ -72,7 +73,7 @@ defmodule PhxPong.User do
       {0, _} -> changeset
       {wins, losses} ->
         win_pct = wins / (wins + losses)
-        put_change(changeset, :details, %{ get_field(changeset, :details) | "win_pct" => win_pct })
+        put_change(changeset, :win_pct, win_pct)
     end
   end
 end

@@ -5,6 +5,7 @@ import KeyHandler, { Events, Keys } from '../lib/key-handler'
 import PlayerScore from './player-score'
 import EndGameMessage from './end-game-message'
 import ServingMenu from './serving-menu'
+import ErrorPage from './error-page'
 
 class GameView extends Component {
 
@@ -17,7 +18,7 @@ class GameView extends Component {
     this.keyHandler = null
     this.state = {
       game: null,
-      isReady: false
+      status: 'pending'
     }
   }
 
@@ -27,6 +28,7 @@ class GameView extends Component {
         this.setState({ status: 'ready', game: response.data.game })
       )
       .catch(response => {
+        console.log(response)
         if (response instanceof Error) {
           this.setState({ status: 'error', message: response.message })
         } else {
@@ -44,21 +46,57 @@ class GameView extends Component {
   handleKeyTap(event, key) {
     switch(event) {
       case Events.TAP:
-        const { game } = this.state
+
+        const { game, game: { player1, player2 } } = this.state
 
         if (!Game.inProgress(game)) return
 
-        // update game in db
-        this.setState({ game: Object.assign({}, game, {
-          player1Score: game.player1Score + (key === Keys.LEFT ? 1 : 0),
-          player2Score: game.player2Score + (key === Keys.LEFT ? 0 : 1)
-        })})
+        Api.patch(`games/${game.id}`, { game: {
+          players: [
+            Object.assign({}, player1, { score: player1.score + (key === Keys.LEFT ? 1 : 0)}),
+            Object.assign({}, player2, { score: player2.score + (key === Keys.LEFT ? 0 : 1)})
+          ]
+        }}).then(response =>
+          this.setState({ status: 'ready', game: response.data.game })
+        )
+        .catch(response => {
+          if (response instanceof Error) {
+            this.setState({ status: 'error', message: response.message })
+          } else {
+            this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+          }
+        })
     }
   }
 
-  render() {
+  handleChoice(serverId) {
+    Api.patch(`games/${this.state.game.id}`, { game: {
+      status: 'in-progress',
+      first_server: serverId
+    }}).then(response =>
+      this.setState({ status: 'ready', game: response.data.game })
+    )
+    .catch(response => {
+      if (response instanceof Error) {
+        this.setState({ status: 'error', message: response.message })
+      } else {
+        this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+      }
+    })
+  }
 
-    if (!this.state.isReady) return null
+  render() {
+    switch(this.state.status) {
+      case 'pending':
+        return null
+      case 'error':
+        return <ErrorPage message={this.state.message} />
+      default:
+        return this.view()
+    }
+  }
+
+  view() {
 
     const { game, game: { player1, player2 } } = this.state
 
@@ -67,18 +105,18 @@ class GameView extends Component {
         <PlayerScore
           isServing={Game.isServer(game, player1)}
           playerName={player1.name}
-          score={game.player1Score}
+          score={player1.score}
           side="left"
         />
         <PlayerScore
           isServing={Game.isServer(game, player2)}
           playerName={player2.name}
-          score={game.player2Score}
+          score={player2.score}
           side="right"
         />
 
         { Game.isPending(game) ?
-            <ServingMenu game={game}/> : null
+            <ServingMenu game={game} onChoose={::this.handleChoice}/> : null
         }
 
         { Game.isOver(game) ?

@@ -11,18 +11,11 @@ defmodule PhxPong.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{
-      id: user.id,
-      name: user.name,
-      taunt: user.taunt,
-      wins: user.wins,
-      losses: user.losses,
-      details: user.details
-    }
+    user
   end
 
   def win_pct(user) do
-    user.details["win_pct"]
+    user.win_pct
     |> Float.to_string([decimals: 3])
   end
 
@@ -38,7 +31,7 @@ defmodule PhxPong.UserView do
   end
 
   def last_10(user) do
-    user.details["log"]
+    user.log
       |> Enum.take(10)
       |> Enum.partition(fn result -> result == "W" end)
       |> Tuple.to_list
@@ -47,7 +40,7 @@ defmodule PhxPong.UserView do
   end
 
   def streak(user) do
-    log = user.details["log"]
+    log = user.log
     streak_length = log
       |> Enum.reverse
       |> Enum.reduce_while(0, fn result, acc ->
@@ -63,7 +56,7 @@ defmodule PhxPong.UserView do
   end
 
   def score(game, user) do
-    game.details["points"]
+    game.log
       |> Enum.group_by(&(&1 == user.id))
       |> Map.values
       |> Enum.map(fn points -> Enum.count points end)

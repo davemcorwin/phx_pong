@@ -8,7 +8,11 @@ defmodule PhxPong.PlayerView do
       id: player.id,
       user_id: player.user_id,
       game_id: player.game_id,
-      score: player.score
+      score: player.score,
+      name: player.user.name,
+      taunt: player.user.taunt,
+      wins: player.user.wins,
+      losses: player.user.losses
     }
   end
 end

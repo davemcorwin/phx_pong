@@ -48,12 +48,10 @@ Enum.each(range, fn(_) ->
   winner = if p1_points > p2_points, do: p1_id, else: p2_id
 
   Repo.insert!(Game.changeset(%Game{}, %{
-    status: "complete",
-    details: %{
-      points:       points,
-      first_server: p1_id,
-      winner:       winner
-    },
+    status:       "complete",
+    log:          points,
+    first_server: p1_id,
+    winner:       winner,
     players: [ %{
       user_id: p1_id,
       score: p1_points

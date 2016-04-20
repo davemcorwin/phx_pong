@@ -8,16 +8,14 @@ defmodule PhxPong.Game do
 
   @defaults %{
     status: "pending",
-    details: %{
-      "points" => [],
-      "first_server" => nil,
-      "winner" => nil
-    }
+    log:    []
   }
 
   schema "games" do
-    field :status,  :string, default: @defaults.status
-    field :details, :map,    default: @defaults.details
+    field :status,       :string, default: @defaults.status
+    field :first_server, :integer
+    field :winner,       :integer
+    field :log,          {:array, :integer}, default: @defaults.log
 
     has_many :players, Player
     has_many :users, through: [:players, :user]
@@ -25,8 +23,8 @@ defmodule PhxPong.Game do
     timestamps
   end
 
-  @required_fields ~w(status details)
-  @optional_fields ~w()
+  @required_fields ~w(status log)
+  @optional_fields ~w(first_server winner)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

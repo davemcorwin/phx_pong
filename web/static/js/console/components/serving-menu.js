@@ -1,22 +1,23 @@
 import React, { Component, PropTypes as PT } from 'react'
+import Api from '../lib/api'
 import { Game } from '../types'
 import { Keys } from '../lib/key-handler'
+import Menu from './menu'
 
 class ServingMenu extends Component {
 
   static propTypes = {
-    game: Game.isRequired
+    game: Game.isRequired,
+    onChoose: PT.func.isRequired
   };
 
   onSelect(item) {
-    const { game } = this.props
-    // Meteor.call("setFirstServer", game, item.player);
-    Page(`/game/${game.id}/play`)
+    this.props.onChoose(item.player.id)
   }
 
   render() {
 
-    const { game, game: { player1, player2 } } = this.props
+    const { game: { player1, player2 } } = this.props
 
     const menuItems = [
       { title: player1.name, player: player1 },
@@ -28,7 +29,7 @@ class ServingMenu extends Component {
         <p>Who serves first?</p>
         <Menu
           items={menuItems}
-          listens={[Keys.Left, Keys.Right]}
+          listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={::this.onSelect}
         />
       </div>

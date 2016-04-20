@@ -28,13 +28,10 @@ defmodule PhxPong.GameView do
   def render("game.json", %{game: game}) do
     players = render_many(game.players, PhxPong.PlayerView, "player.json")
 
-    %{
-      id: game.id,
-      status: game.status,
-      players: players,
-      player1: Enum.at(players,0),
-      player2: Enum.at(players,1)
-    }
-    |> Map.merge(game.details)
+    game
+    |> Map.from_struct
+    |> Map.put(:players, players)
+    |> Map.put(:player1, Enum.at(players,0))
+    |> Map.put(:player2, Enum.at(players,1))
   end
 end
