@@ -25,12 +25,9 @@ class ChoosePlayerView extends Component {
       )
       .catch(response => {
         if (response instanceof Error) {
-          // Something happened in setting up the request that triggered an Error
           this.setState({ status: 'error', message: response.message })
         } else {
-          // The request was made, but the server responded with a status code
-          // that falls out of the range of 2xx
-          this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+          this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
         }
       })
   }
@@ -54,11 +51,8 @@ class ChoosePlayerView extends Component {
       )
       .catch(response => {
         if (response instanceof Error) {
-          // Something happened in setting up the request that triggered an Error
           this.setState({ status: 'error', message: response.message })
         } else {
-          // The request was made, but the server responded with a status code
-          // that falls out of the range of 2xx
           this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
         }
       })

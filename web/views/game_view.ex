@@ -26,12 +26,10 @@ defmodule PhxPong.GameView do
   end
 
   def render("game.json", %{game: game}) do
-    players = render_many(game.players, PhxPong.PlayerView, "player.json")
-
     game
-    |> Map.from_struct
-    |> Map.put(:players, players)
-    |> Map.put(:player1, Enum.at(players,0))
-    |> Map.put(:player2, Enum.at(players,1))
+    |> Map.take([:id, :status, :winner, :first_server, :log])
+    |> Map.put(:players, render_many(game.players, PhxPong.PlayerView, "player.json"))
+    |> Map.put(:player1, render_one(Enum.at(game.players,0), PhxPong.PlayerView, "player.json"))
+    |> Map.put(:player2, render_one(Enum.at(game.players,1), PhxPong.PlayerView, "player.json"))
   end
 end

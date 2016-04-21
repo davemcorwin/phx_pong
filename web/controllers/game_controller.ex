@@ -30,7 +30,7 @@ defmodule PhxPong.GameController do
 
   def update(conn, %{"id" => id, "game" => game_params}) do
     game = Repo.get!(Game, id) |> Repo.preload(:users)
-    changeset = Game.changeset(game, game_params)
+    changeset = IO.inspect Game.changeset(game, game_params)
 
     case Repo.update(changeset) do
       {:ok, game} ->

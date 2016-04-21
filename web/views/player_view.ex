@@ -4,15 +4,9 @@ defmodule PhxPong.PlayerView do
   alias PhxPong.Player
 
   def render("player.json", %{player: player}) do
-    %{
-      id: player.id,
-      user_id: player.user_id,
-      game_id: player.game_id,
-      score: player.score,
-      name: player.user.name,
-      taunt: player.user.taunt,
-      wins: player.user.wins,
-      losses: player.user.losses
-    }
+    Map.merge(
+      Map.take(player, [:id, :user_id, :game_id, :score]),
+      Map.take(player.user, [:name, :taunt, :wins, :losses])
+    )
   end
 end

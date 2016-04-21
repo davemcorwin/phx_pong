@@ -12,6 +12,7 @@ defmodule PhxPong.UserView do
 
   def render("user.json", %{user: user}) do
     user
+    |> Map.take([:id, :name, :wins, :losses, :taunt])
   end
 
   def win_pct(user) do

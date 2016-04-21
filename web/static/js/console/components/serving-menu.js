@@ -12,7 +12,7 @@ class ServingMenu extends Component {
   };
 
   onSelect(item) {
-    this.props.onChoose(item.player.id)
+    this.props.onChoose(item.id)
   }
 
   render() {
@@ -20,8 +20,8 @@ class ServingMenu extends Component {
     const { game: { player1, player2 } } = this.props
 
     const menuItems = [
-      { title: player1.name, player: player1 },
-      { title: player2.name, player: player2 }
+      { title: player1.name, id: player1.id },
+      { title: player2.name, id: player2.id }
     ]
 
     return (

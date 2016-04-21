@@ -23,7 +23,16 @@ class GameView extends Component {
   }
 
   componentDidMount() {
-    Api.get(`games/${this.props.gameId}`)
+    this.fetchGame(this.props.gameId)
+    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKeyTap)
+  }
+
+  componentWillReceiveProps({gameId}) {
+    this.fetchGame(gameId)
+  }
+
+  fetchGame(gameId) {
+    Api.get(`games/${gameId}`)
       .then(response =>
         this.setState({ status: 'ready', game: response.data.game })
       )
@@ -35,8 +44,6 @@ class GameView extends Component {
           this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
         }
       })
-
-    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKeyTap)
   }
 
   componenWillUnmount() {
@@ -51,19 +58,22 @@ class GameView extends Component {
 
         if (!Game.inProgress(game)) return
 
+        const pointPlayer = key === Keys.LEFT ? player1 : player2
+        pointPlayer.score += 1;
+
         Api.patch(`games/${game.id}`, { game: {
-          players: [
-            Object.assign({}, player1, { score: player1.score + (key === Keys.LEFT ? 1 : 0)}),
-            Object.assign({}, player2, { score: player2.score + (key === Keys.LEFT ? 0 : 1)})
-          ]
-        }}).then(response =>
+          log: game.log.concat(pointPlayer.id),
+          players: [player1, player2]
+        }})
+        .then(response =>
           this.setState({ status: 'ready', game: response.data.game })
         )
         .catch(response => {
           if (response instanceof Error) {
             this.setState({ status: 'error', message: response.message })
           } else {
-            this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
+            console.log(response)
+            this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
           }
         })
     }
@@ -71,7 +81,6 @@ class GameView extends Component {
 
   handleChoice(serverId) {
     Api.patch(`games/${this.state.game.id}`, { game: {
-      status: 'in-progress',
       first_server: serverId
     }}).then(response =>
       this.setState({ status: 'ready', game: response.data.game })
