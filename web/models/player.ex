@@ -9,10 +9,11 @@ defmodule PhxPong.Player do
     belongs_to :user, User
     belongs_to :game, Game
     field :score, :integer, default: 0
+    field :status, :string, default: "normal"
   end
 
   @required_fields ~w(user_id score)
-  @optional_fields ~w(game_id)
+  @optional_fields ~w(game_id status)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

@@ -13,6 +13,9 @@ defmodule PhxPong.GameController do
   def create(conn, %{"game" => game_params}) do
     changeset = Game.changeset(%Game{}, game_params)
 
+    IO.inspect changeset
+
+
     case Repo.insert(changeset) do
       {:ok, game} ->
         render(conn, :show, game: game)

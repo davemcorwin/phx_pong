@@ -6,5 +6,6 @@ export default PT.shape({
   taunt:  PT.string,
   wins:   PT.number.isRequired,
   losses: PT.number.isRequired,
-  score:  PT.number.isRequired
+  score:  PT.number.isRequired,
+  status:  PT.string.isRequired
 })

@@ -36,6 +36,7 @@ defmodule PhxPong.Repo.Migrations.CreatePong do
       add :user_id, references(:users)
       add :game_id, references(:games)
       add :score, :integer, default: 0
+      add :status, :string, default: "normal"
     end
 
     create index(:players, [:user_id])

@@ -28,7 +28,12 @@ class GameView extends Component {
   }
 
   componentWillReceiveProps({gameId}) {
-    this.fetchGame(gameId)
+    if (gameId !== this.state.game.id)
+      this.fetchGame(gameId)
+  }
+
+  componenWillUnmount() {
+    KeyHandler.removeListener(this.keyHandler)
   }
 
   fetchGame(gameId) {
@@ -44,10 +49,6 @@ class GameView extends Component {
           this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
         }
       })
-  }
-
-  componenWillUnmount() {
-    KeyHandler.removeListener(this.keyHandler)
   }
 
   handleKeyTap(event, key) {
@@ -115,13 +116,13 @@ class GameView extends Component {
           isServing={Game.isServer(game, player1)}
           playerName={player1.name}
           score={player1.score}
-          side="left"
+          status={Game.playerStatus(game, player1)}
         />
         <PlayerScore
           isServing={Game.isServer(game, player2)}
           playerName={player2.name}
           score={player2.score}
-          side="right"
+          status={Game.playerStatus(game, player2)}
         />
 
         { Game.isPending(game) ?

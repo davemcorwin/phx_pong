@@ -22,6 +22,7 @@ h1.game-name {
   font-size: 80px;
   margin-top: 30px;
   margin-bottom: 100px;
+  text-align: center;
 }
 
 img {
@@ -66,41 +67,21 @@ p.menu-item.selected:after {
 }
 
 @keyframes pulse {
-   0% {
-      color: rgba(250, 25, 25, 1);
-   }
-   90% {
-      color: rgba(255,0,0,0.0);
-   }
-   100% {
-      color: rgba(255,0,0,1.0);
-   }
+   0% { color: rgba(250, 25, 25, 1); }
+   90% { color: rgba(255,0,0,0.0); }
+   100% { color: rgba(255,0,0,1.0); }
 }
 
 @-moz-keyframes pulse {
- 0% {
-   color: rgba(165, 25, 25, 1);
- }
- 90% {
-   color: rgba(255,0,0,0.0);
- }
- 100% {
-   color: rgba(255,0,0,1.0);
- }
-
+ 0% { color: rgba(165, 25, 25, 1); }
+ 90% { color: rgba(255,0,0,0.0); }
+ 100% { color: rgba(255,0,0,1.0); }
 }
 
 @-webkit-keyframes pulse {
- 0% {
-   color: rgba(165, 25, 25, 1);
- }
- 90% {
-   color: rgba(255,0,0,0.0);
- }
- 100% {
-   color: rgba(255,0,0,1.0);
- }
-
+ 0% { color: rgba(165, 25, 25, 1); }
+ 90% { color: rgba(255,0,0,0.0); }
+ 100% { color: rgba(255,0,0,1.0); }
 }
 
 .game-credits {
@@ -115,16 +96,20 @@ p.menu-item.selected:after {
   height: 100vh;
 }
 
-.player-container.left p.player-name {
+.player-container{
   text-align: center;
   font-size: 5vh;
   margin-top: 20px;
+  position: relative;
 }
 
-.player-container.right p.player-name {
-  text-align: center;
-  font-size: 5vh;
-  margin-top: 20px;
+.player-container:nth-child(1) {
+  float: left;
+  border-right: 5px solid white;
+}
+
+.player-container:nth-child(2) {
+  float: right;
 }
 
 .serving-message {
@@ -138,11 +123,7 @@ p.menu-item.selected:after {
   border-radius: 5px;
 }
 
-.player-container.left .serving-message {
-  font-size: 5vh;
-}
-
-.player-container.right .serving-message {
+.player-container.serving-message {
   font-size: 5vh;
 }
 
@@ -310,4 +291,43 @@ input, textarea {
     background-color: #F2D7D5;
     border-left-color: #C0392B;
     color: #C0392B;
+}
+
+.player-container.heating-up{
+  border-width: 20px;
+  border-style: solid;
+  animation: border-pulse 2s linear infinite;
+  -webkit-animation: border-pulse 2s linear infinite;
+  -moz-animation: border-pulse 2s linear infinite;
+}
+
+img.flames{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-right: 0px;
+  z-index: -1;
+  display: none;
+}
+.player-container.on-fire img.flames{
+  display: block;
+}
+
+@keyframes border-pulse {
+   0% { border-color: rgba(250, 25, 25, 1); }
+   50% { border-color: rgba(255,0,0,0.0); }
+   100% { border-color: rgba(255,0,0,1.0); }
+}
+
+@-moz-keyframes border-pulse {
+  0% { border-color: rgba(250, 25, 25, 1); }
+  50% { border-color: rgba(255,0,0,0.0); }
+  100% { border-color: rgba(255,0,0,1.0); }
+}
+
+@-webkit-keyframes border-pulse {
+  0% { border-color: rgba(250, 25, 25, 1); }
+  50% { border-color: rgba(255,0,0,0.0); }
+  100% { border-color: rgba(255,0,0,1.0); }
 }

@@ -107,7 +107,7 @@ class LeaderboardView extends Component {
     return (
       <div>
         <h1 className="leader-board-title">
-          <img src="/rocket.png" />Leaders
+          <img src="/images/rocket.png" />Leaders
         </h1>
         <Leaderboard players={pagePlayers} />
         <Menu

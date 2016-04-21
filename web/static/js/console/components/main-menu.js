@@ -11,7 +11,7 @@ class MainMenu extends Component {
 
     this.menuItems = [
       { title: "Play",    action: 'play',    target: "/game/new" },
-      { title: "Guest",   action: 'guestPlay', target: "game_guest/new" },
+      // { title: "Guest",   action: 'guestPlay', target: "game_guest/new" },
       { title: "Leaders", action: 'leaders', target: "/leaders" }
     ]
   }
@@ -29,7 +29,7 @@ class MainMenu extends Component {
   render() {
     return (
       <div>
-        <h1 className="game-name" style={{textAlign: 'center'}}>
+        <h1 className="game-name">
           <img src="/images/rocket.png" />PONG
         </h1>
         <Menu

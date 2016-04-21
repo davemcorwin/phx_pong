@@ -23,3 +23,11 @@ export function inProgress(game) {
 export function isOver(game) {
   return game.status === 'complete'
 }
+
+export function playerStatus(game, player) {
+  const log = game.log
+  return log.length > 3 && log.slice(-4).every(id => id === player.id) ?
+      'on-fire' :
+      log.length > 2 && log.slice(-3).every(id => id === player.id) ?
+        'heating-up' : 'normal'
+}
