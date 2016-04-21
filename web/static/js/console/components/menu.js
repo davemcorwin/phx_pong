@@ -84,6 +84,7 @@ class Menu extends Component {
         { items.map((item, idx) =>
           <MenuItem
             title={item.title}
+            label={item.label}
             highlighted={highlighted === idx}
             selected={selected === idx}
             key={`item${idx}`}

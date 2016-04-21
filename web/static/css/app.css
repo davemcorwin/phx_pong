@@ -30,39 +30,46 @@ img {
   padding-right: 50px;
 }
 
-p.menu-item {
+
+/* Menu Item Styles */
+.menu-item {
   font-size: 40px;
   text-transform: uppercase;
 }
 
-p.game-start:before {
+.menu-item.label{
+  padding-right: 40px;
+}
+
+/* Menu Item selected */
+.menu-item.selected {
+  color: rgba(28, 148, 1, 1);
+}
+
+.menu-item.selected:before {
   content: '\25b6\00a0';
 }
 
-p.game-start:after {
+.menu-item.selected:after {
   content: '\00a0\25C0';
 }
 
-p.game-start {
+/* Menu Item active */
+.menu-item.active {
   animation: pulse 1s linear infinite;
   -webkit-animation: pulse 1s linear infinite;
   -moz-animation: pulse 1s linear infinite;
 }
 
-p.game-start a {
-  /*color: white;*/
+.menu-item.active a {
   text-decoration: none;
 }
 
-p.menu-item.selected {
-  color: rgba(28, 148, 1, 1);
-}
-
-p.menu-item.selected:before {
+.menu-item.active:before {
   content: '\25b6\00a0';
 }
 
-p.menu-item.selected:after {
+.menu-item.active:after {
   content: '\00a0\25C0';
 }
 
@@ -166,6 +173,7 @@ p.menu-item.selected:after {
 .leader-board-title {
   font-size: 80px;
   margin-bottom: 70px;
+  text-align: center;
 }
 
 .leader-board {

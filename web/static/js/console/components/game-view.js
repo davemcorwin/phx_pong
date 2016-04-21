@@ -1,6 +1,8 @@
 import React, { Component, PropTypes as PT } from 'react'
+import Page from 'page'
 import Api from '../lib/api'
 import * as Game from '../lib/game'
+import Settings from '../lib/settings'
 import KeyHandler, { Events, Keys } from '../lib/key-handler'
 import PlayerScore from './player-score'
 import EndGameMessage from './end-game-message'
@@ -24,7 +26,7 @@ class GameView extends Component {
 
   componentDidMount() {
     this.fetchGame(this.props.gameId)
-    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKeyTap)
+    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKey)
   }
 
   componentWillReceiveProps({gameId}) {
@@ -51,19 +53,32 @@ class GameView extends Component {
       })
   }
 
-  handleKeyTap(event, key) {
+  handleKey(event, key) {
+
+    console.log('ia m caled')
+    const { game, game: { player1, player2 } } = this.state
+
+    if (!Game.inProgress(game)) return
+
     switch(event) {
+
+      case Events.HOLD:
+        Page(`/?gameId=${game.id}`)
+        break
+
       case Events.TAP:
 
-        const { game, game: { player1, player2 } } = this.state
-
-        if (!Game.inProgress(game)) return
-
         const pointPlayer = key === Keys.LEFT ? player1 : player2
-        pointPlayer.score += 1;
+        pointPlayer.score += 1
+        const log = game.log.concat(pointPlayer.id)
+
+        if (Settings.nbaJamMode && Game.playerStatus(game, pointPlayer) === 'on-fire') {
+          pointPlayer.score += 1
+          log.push(pointPlayer.id)
+        }
 
         Api.patch(`games/${game.id}`, { game: {
-          log: game.log.concat(pointPlayer.id),
+          log: log,
           players: [player1, player2]
         }})
         .then(response =>

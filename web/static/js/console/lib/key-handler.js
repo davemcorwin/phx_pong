@@ -57,7 +57,8 @@ function handleKeyUp(event) {
 function notify(event, key) {
   // Need to create a copy of this array, otherwise a new listener could get called...
   Array.from(listeners.keys()).forEach(cb => {
-    if (listeners.get(cb).includes(key)) cb(event, key)
+    if (listeners.get(cb) && listeners.get(cb).includes(key))
+      cb(event, key)
   })
 }
 

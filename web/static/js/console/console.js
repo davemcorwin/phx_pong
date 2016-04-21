@@ -5,6 +5,7 @@ import {
   ChoosePlayerView,
   GameView,
   LeaderboardView,
+  SettingsView,
   MainMenu } from './components'
 
 const FourOhFour = () => <h1>404 son!</h1>
@@ -20,10 +21,11 @@ class Console extends Component {
 
     KeyHandler.register(window)
 
-    Page('/',                             ctx => this.setState({ component: <MainMenu />}))
+    Page('/',                             ctx => this.setState({ component: <MainMenu ctx={ctx} />}))
     Page('/leaders',                      ctx => this.setState({ component: <LeaderboardView />}))
+    Page('/settings',                     ctx => this.setState({ component: <SettingsView />}))
     Page('/game/new',                     ctx => this.setState({ component: <ChoosePlayerView />}))
-    Page('/game/:id',                     ctx => this.setState({ component: <GameView gameId={ctx.params.id}/>}))
+    Page('/game/:id',                     ctx => this.setState({ component: <GameView gameId={ctx.params.id} ctx={ctx}/>}))
     // Page('/game_guest/new',               ctx => this.setState({ component: <GuestServingMenu />}))
     // Page('/game_guest/play/:firstServer', ctx => this.setState({ component: <GuestPlay />}))
 

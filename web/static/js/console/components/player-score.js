@@ -1,5 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Classnames from 'classnames'
+import Settings from '../lib/settings'
 
 class PlayerScore extends Component {
 
@@ -22,10 +23,12 @@ class PlayerScore extends Component {
   }
 
   componentWillReceiveProps({status}) {
-    if (status === 'heating-up')
-      this.heatingUp.play()
-    else if (status === 'on-fire' && this.props.status !=='on-fire')
-      this.onFire.play()
+    if (Settings.nbaJamMode) {
+      if (status === 'heating-up')
+        this.heatingUp.play()
+      else if (status === 'on-fire' && this.props.status !=='on-fire')
+        this.onFire.play()
+    }
   }
 
   render() {
@@ -33,8 +36,8 @@ class PlayerScore extends Component {
     const
       { isServing, playerName, score, status } = this.props,
       classes = Classnames('player-container', {
-        'heating-up': status === 'heating-up',
-        'on-fire':    status === 'on-fire',
+        'heating-up': Settings.nbaJamMode && status === 'heating-up',
+        'on-fire':    Settings.nbaJamMode && status === 'on-fire',
       })
 
     return (

@@ -4,6 +4,7 @@ import Classnames from 'classnames'
 class MenuItem extends Component {
 
   static propTypes = {
+    label:       PT.string,
     title:       PT.string,
     highlighted: PT.bool,
     selected:    PT.bool
@@ -11,15 +12,19 @@ class MenuItem extends Component {
 
   render() {
 
-    const { highlighted, selected, title } = this.props
+    const { highlighted, selected, title, label } = this.props
 
-    const classes = Classnames({
-      'menu-item':  true,
-      'game-start': highlighted,
-      'selected':   selected
+    const classes = Classnames('menu-item', {
+      'active':   highlighted,
+      'selected': selected
     })
 
-    return <p className={classes}>{title}</p>
+    return (
+      <p>
+        { label ? <span className="menu-item label">{label}</span> : null }
+        <span className={classes}>{title}</span>
+      </p>
+    )
   }
 }
 

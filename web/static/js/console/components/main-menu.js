@@ -6,16 +6,6 @@ import MenuItem from './menu-item'
 
 class MainMenu extends Component {
 
-  constructor() {
-    super()
-
-    this.menuItems = [
-      { title: "Play",    action: 'play',    target: "/game/new" },
-      // { title: "Guest",   action: 'guestPlay', target: "game_guest/new" },
-      { title: "Leaders", action: 'leaders', target: "/leaders" }
-    ]
-  }
-
   onSelect(item) {
     if (item.action === 'challenge') {
       // Meteor.call("newGameFromChallenge", item.challenge, (_,gameId) => {
@@ -27,13 +17,29 @@ class MainMenu extends Component {
   }
 
   render() {
+
+    const { ctx: { querystring } } = this.props
+
+    const gameId = querystring && querystring.split('=')[1]
+
+    const menuItems = [
+      { title: "Play",    action: 'play',    target: "/game/new" },
+      // { title: "Guest",   action: 'guestPlay', target: "game_guest/new" },
+      { title: "Leaders", action: 'leaders', target: "/leaders" },
+      { title: "Settings", action: 'settings', target: "/settings" }
+    ]
+
+    if (gameId) {
+      menuItems.push({ title: "Resume Game", action: 'resume', target: `/game/${gameId}` })
+    }
+
     return (
       <div>
         <h1 className="game-name">
           <img src="/images/rocket.png" />PONG
         </h1>
         <Menu
-          items={this.menuItems}
+          items={menuItems}
           listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={::this.onSelect}
         />
