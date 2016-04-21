@@ -310,6 +310,7 @@ img.flames{
   z-index: -1;
   display: none;
 }
+
 .player-container.on-fire img.flames{
   display: block;
 }
