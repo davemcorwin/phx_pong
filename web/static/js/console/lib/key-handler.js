@@ -3,6 +3,8 @@ const Keys = {
   RIGHT: 66
 }
 
+const handledKeys = Object.values(Keys)
+
 const Events = {
   TAP: 'tap',
   HOLD: 'hold'
@@ -27,7 +29,14 @@ function unregister() {
 }
 
 function addListener(keys, cb) {
-  listeners.set(cb, Array.isArray(keys) ? keys : [keys])
+  const _keys = Array.isArray(keys) ? keys : [keys]
+  const unhandledKeys = _keys.filter(key => !handledKeys.includes(key)))
+
+  if (unhandledKeys.length > 0)
+    throw new Error(`Unhandled keys: ${unhandledKeys} passed to key handler.`)
+
+  listeners.set(cb, _keys)
+
   return cb
 }
 

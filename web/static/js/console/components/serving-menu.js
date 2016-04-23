@@ -12,7 +12,7 @@ class ServingMenu extends Component {
   };
 
   onSelect(item) {
-    this.props.onChoose(item.id)
+    this.props.onChoose({first_server: item.id})
   }
 
   render() {

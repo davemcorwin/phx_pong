@@ -1,155 +1,85 @@
 import React, { Component, PropTypes as PT } from 'react'
-import Page from 'page'
-import Api from '../lib/api'
+import { PromiseState } from 'react-refetch'
+import connect from '../lib/api'
 import * as Game from '../lib/game'
 import Settings from '../lib/settings'
-import KeyHandler, { Events, Keys } from '../lib/key-handler'
-import PlayerScore from './player-score'
+import PlayerPanel    from './player-panel'
 import EndGameMessage from './end-game-message'
-import ServingMenu from './serving-menu'
-import ErrorPage from './error-page'
+import ServingMenu    from './serving-menu'
+import Container      from './container'
 
-class GameView extends Component {
+export class GameView extends Component {
 
   static propTypes = {
-    gameId: PT.string.isRequired
+    gameFetch: PT.instanceOf(PromiseState).isRequired,
+    updateGame: PT.func.isRequired
   };
 
-  constructor() {
-    super()
-    this.keyHandler = null
-    this.state = {
-      game: null,
-      status: 'pending'
-    }
-  }
-
-  componentDidMount() {
-    this.fetchGame(this.props.gameId)
-    this.keyHandler = KeyHandler.addListener([Keys.LEFT, Keys.RIGHT], ::this.handleKey)
-  }
-
-  componentWillReceiveProps({gameId}) {
-    if (gameId !== this.state.game.id)
-      this.fetchGame(gameId)
-  }
-
-  componentWillUnmount() {
-    KeyHandler.removeListener(this.keyHandler)
-  }
-
-  fetchGame(gameId) {
-    Api.get(`games/${gameId}`)
-      .then(response => {
-        this.setState({ status: 'ready', game: response.data.game })
-        localStorage.gameId = gameId
-      })
-      .catch(response => {
-        console.log(response)
-        if (response instanceof Error) {
-          this.setState({ status: 'error', message: response.message })
-        } else {
-          this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
-        }
-      })
-  }
-
-  handleKey(event, key) {
-
-    const { game, game: { player1, player2 } } = this.state
+  handleScore(game, player) {
 
     if (!Game.inProgress(game)) return
 
-    switch(event) {
+    let score = player.score + 1
+    const log = [player.id]
 
-      case Events.HOLD:
-        Page('/')
-        break
-
-      case Events.TAP:
-
-        const pointPlayer = key === Keys.LEFT ? player1 : player2
-        pointPlayer.score += 1
-        const log = game.log.concat(pointPlayer.id)
-
-        if (Settings.nbaJamMode && Game.playerStatus(game, pointPlayer) === 'on-fire') {
-          pointPlayer.score += 1
-          log.push(pointPlayer.id)
-        }
-
-        Api.patch(`games/${game.id}`, { game: {
-          log: log,
-          players: [player1, player2]
-        }})
-        .then(response =>
-          this.setState({ status: 'ready', game: response.data.game })
-        )
-        .catch(response => {
-          if (response instanceof Error) {
-            this.setState({ status: 'error', message: response.message })
-          } else {
-            console.log(response)
-            this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
-          }
-        })
+    if (Settings.nbaJamMode && Game.playerStatus(game, player) === 'on-fire') {
+      score += 1
+      log.push(player.id)
     }
-  }
 
-  handleChoice(serverId) {
-    Api.patch(`games/${this.state.game.id}`, { game: {
-      first_server: serverId
-    }}).then(response =>
-      this.setState({ status: 'ready', game: response.data.game })
-    )
-    .catch(response => {
-      if (response instanceof Error) {
-        this.setState({ status: 'error', message: response.message })
-      } else {
-        this.setState({ status: 'error', message: `${response.status}: ${response.data}` })
-      }
+    const playerIdx = game.players.findIndex(val => val.id === player.id)
+    const newGame = update(game, {
+      log: {$push: log},
+      players: {$splice: [[playerIdx, 1, update(player, { score: x => x + score }) ]]}
     })
+
+    this.props.updateGame(newGame)
   }
 
   render() {
-    switch(this.state.status) {
-      case 'pending':
-        return null
-      case 'error':
-        return <ErrorPage message={this.state.message} />
-      default:
-        return this.view()
-    }
-  }
 
-  view() {
+    const { gameFetch, updateGame } = this.props
 
-    const { game, game: { player1, player2 } } = this.state
+    <Container ps={gameFetch} onFulfillment={game => {
 
-    return (
-      <div className="game-container">
-        <PlayerScore
-          isServing={Game.isServer(game, player1)}
-          playerName={player1.name}
-          score={player1.score}
-          status={Game.playerStatus(game, player1)}
-        />
-        <PlayerScore
-          isServing={Game.isServer(game, player2)}
-          playerName={player2.name}
-          score={player2.score}
-          status={Game.playerStatus(game, player2)}
-        />
+      const { player1, player2 } = game
 
-        { Game.isPending(game) ?
-            <ServingMenu game={game} onChoose={::this.handleChoice}/> : null
-        }
+      return (
+        <div className="game-container">
+          <PlayerPanel
+            isServer={Game.isServer(game, player1)}
+            key={Keys.LEFT}
+            onScore={this.handleScore.bind(this, game, player1)}
+            player={player1}
+            playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player1)} />
 
-        { Game.isOver(game) ?
-            <EndGameMessage game={game} winner={Game.winner(game)} /> : null
-        }
-      </div>
-    )
+          <PlayerPanel
+            isServer={Game.isServer(game, player2)}
+            key={Keys.RIGHT}
+            onScore={this.handleScore.bind(this, game, player2)}
+            player={player2}
+            playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player2)} />
+
+          { Game.isPending(game) ?
+              <ServingMenu game={game} onChoose={updateGame}/> : null
+          }
+
+          { Game.isOver(game) ?
+              <EndGameMessage game={game} winner={Game.winner(game)} /> : null
+          }
+        </div>
+      )
+    }} />
   }
 }
 
-export default GameView
+export default connect(props => ({
+  gameFetch: `/games/${props.gameId}`,
+  updateGame: game => ({
+    gameFetch: {
+      url: `/games/${props.gameId}`,
+      method: 'PATCH',
+      body: JSON.stringify({ game: game })
+    }
+  })
+}))(GameView)

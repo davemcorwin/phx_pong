@@ -73,6 +73,8 @@ exports.config = {
       "phoenix",
       "phoenix_html",
       "react",
-      "react-dom"]
+      "react-dom",
+      "react-refetch",
+      "url-join"]
   }
 };
