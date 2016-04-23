@@ -39,7 +39,6 @@ defmodule PhxPong.UserView do
       |> Enum.map(&length/1)
       |> Enum.join(" - ")
   end
-
   def streak(user) do
     log = user.log
     streak_length = log

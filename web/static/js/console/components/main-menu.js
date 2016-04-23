@@ -1,10 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 import { Keys } from '../lib/key-handler'
 import Menu from './menu'
 import MenuItem from './menu-item'
 
 class MainMenu extends Component {
+
+  static propTypes = {
+    gameId: PT.string
+  };
 
   onSelect(item) {
     if (item.action === 'challenge') {
@@ -18,9 +22,7 @@ class MainMenu extends Component {
 
   render() {
 
-    const { ctx: { querystring } } = this.props
-
-    const gameId = querystring && querystring.split('=')[1]
+    const { gameId } = this.props
 
     const menuItems = [
       { title: "Play",    action: 'play',    target: "/game/new" },

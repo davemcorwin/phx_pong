@@ -21,7 +21,7 @@ class Console extends Component {
 
     KeyHandler.register(window)
 
-    Page('/',                             ctx => this.setState({ component: <MainMenu ctx={ctx} />}))
+    Page('/',                             ctx => this.setState({ component: <MainMenu gameId={localStorage.gameId}/>}))
     Page('/leaders',                      ctx => this.setState({ component: <LeaderboardView />}))
     Page('/settings',                     ctx => this.setState({ component: <SettingsView />}))
     Page('/game/new',                     ctx => this.setState({ component: <ChoosePlayerView />}))

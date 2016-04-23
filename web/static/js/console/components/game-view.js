@@ -34,15 +34,16 @@ class GameView extends Component {
       this.fetchGame(gameId)
   }
 
-  componenWillUnmount() {
+  componentWillUnmount() {
     KeyHandler.removeListener(this.keyHandler)
   }
 
   fetchGame(gameId) {
     Api.get(`games/${gameId}`)
-      .then(response =>
+      .then(response => {
         this.setState({ status: 'ready', game: response.data.game })
-      )
+        localStorage.gameId = gameId
+      })
       .catch(response => {
         console.log(response)
         if (response instanceof Error) {
@@ -55,7 +56,6 @@ class GameView extends Component {
 
   handleKey(event, key) {
 
-    console.log('ia m caled')
     const { game, game: { player1, player2 } } = this.state
 
     if (!Game.inProgress(game)) return
@@ -63,7 +63,7 @@ class GameView extends Component {
     switch(event) {
 
       case Events.HOLD:
-        Page(`/?gameId=${game.id}`)
+        Page('/')
         break
 
       case Events.TAP:
