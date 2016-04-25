@@ -16,9 +16,8 @@ defmodule PhxPong.Router do
   scope "/api", PhxPong do
     pipe_through :api
 
-    resources "/games", GameController, only: [:create, :index, :show, :update]
-    # resources "/players", UserController, only: [:index], as: "player"
-    resources "/users", UserController, only: [:index]
+    resources "/games", GameController, only: [:create, :index, :show, :update], as: "api_game"
+    resources "/users", UserController, only: [:index], as: "api_user"
   end
 
   scope "/", PhxPong do

@@ -18,7 +18,7 @@ defmodule PhxPong.GameControllerTest do
         Repo.insert!(Game.changeset(@valid_attrs))]
       |> Enum.map(&(&1.id))
 
-    conn = get conn, game_path(conn, :index)
+    conn = get conn, api_game_path(conn, :index)
 
     response_ids =
       json_response(conn, :ok)
@@ -32,7 +32,7 @@ defmodule PhxPong.GameControllerTest do
 
     game = Repo.insert!(Game.changeset(@valid_attrs))
 
-    conn = get conn, game_path(conn, :show, game)
+    conn = get conn, api_game_path(conn, :show, game)
 
     response_id =
       json_response(conn, :ok)
@@ -43,33 +43,33 @@ defmodule PhxPong.GameControllerTest do
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
 
-    conn = post conn, game_path(conn, :create), game: @valid_attrs
+    conn = post conn, api_game_path(conn, :create), game: @valid_attrs
 
     assert json_response(conn, :ok) |> Map.has_key?("game")
     assert Repo.get_by(Game, @valid_attrs)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, game_path(conn, :create), game: @invalid_attrs
+    conn = post conn, api_game_path(conn, :create), game: @invalid_attrs
     assert json_response(conn, :conflict) |> Map.has_key?("errors")
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
-      get conn, game_path(conn, :show, -1)
+      get conn, api_game_path(conn, :show, -1)
     end
   end
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn} do
     game = Repo.insert! Game.changeset(@valid_attrs)
-    conn = put conn, game_path(conn, :update, game), game: @valid_attrs
+    conn = put conn, api_game_path(conn, :update, game), game: @valid_attrs
     assert json_response(conn, :ok) |> Map.has_key?("game")
     assert Repo.get_by(Game, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
     game = Repo.insert! Game.changeset(@valid_attrs)
-    conn = put conn, game_path(conn, :update, game), game: @invalid_attrs
+    conn = put conn, api_game_path(conn, :update, game), game: @invalid_attrs
     assert json_response(conn, :conflict) |> Map.has_key?("errors")
   end
 end
