@@ -59,10 +59,11 @@ defmodule PhxPong.UserView do
   end
 
   def score(game, user) do
-    game.log
-      |> Enum.group_by(&(&1 == user.id))
-      |> Map.values
-      |> Enum.map(fn points -> Enum.count points end)
+    game.players
+    |> Enum.partition(&(&1.user_id == user.id))
+    |> Tuple.to_list
+    |> List.flatten
+    |> Enum.map(&(&1.score))
   end
 
   def result([a, b]) when a > b, do: "W"

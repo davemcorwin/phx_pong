@@ -19,7 +19,7 @@
       <tr>
         <td><%= Ecto.DateTime.to_date(game.inserted_at) %></td>
         <td>vs <%= opponent(game, @user, @users) %></td>
-        <td><%#= result score(game, @user) %></td>
+        <td><%= result score(game, @user) %></td>
         <td><%= Enum.join score(game, @user), " - " %></td>
         <td><%= status game.status %></td>
       </tr>
