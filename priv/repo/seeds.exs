@@ -54,10 +54,12 @@ Enum.each(range, fn(_) ->
     winner:       winner,
     players: [ %{
       user_id: p1_id,
-      score: p1_points
+      score: p1_points,
+      position: 1
     }, %{
       user_id: p2_id,
-      score: p2_points
+      score: p2_points,
+      position: 2
     }]
   }))
 

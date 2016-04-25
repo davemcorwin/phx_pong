@@ -14,7 +14,6 @@ export class EndGameMessage extends Component {
     createGame:       PT.func.isRequired,
     createGameResult: PT.instanceOf(PromiseState),
     game:    Game.isRequired,
-    guest:   PT.bool,
     winner:  Player.isRequired
   };
 
@@ -31,7 +30,7 @@ export class EndGameMessage extends Component {
 
   onSelect(item) {
 
-    const { game: { first_server, player1, player2 }, guest } = this.props
+    const { game: { first_server, player1, player2 } } = this.props
 
     switch(item.action) {
 
@@ -40,12 +39,11 @@ export class EndGameMessage extends Component {
         break
 
       case 'new':
-        if (guest)
-          Page('/game_guest/new')
-        else {
-          const newFirstServer = first_server === player1.id ? player2.user_id : player1.user_id
-          this.props.createGame([player1, player2], newFirstServer)
-        }
+        const newFirstServer = first_server === player1.id ? player2.user_id : player1.user_id
+        this.props.createGame([
+          { user_id: player1.user_id, position: player1.position },
+          { user_id: player2.user_id, position: player2.position }
+        ], newFirstServer)
         break
     }
   }
@@ -62,7 +60,7 @@ export class EndGameMessage extends Component {
     return (
       <div className="game-message">
         <p>{winner.name} Wins!</p>
-        <p>{winner.taunt}</p>
+        { winner.taunt ? <p>{winner.taunt}</p> : null }
         <Menu
           items={menuItems}
           listens={[Keys.LEFT, Keys.RIGHT]}
@@ -78,11 +76,7 @@ export default connect(props => ({
     createGameResult: {
       url: '/games',
       method: 'POST',
-      body: {
-        game: {
-          players: players.map(player => ({ user_id: player.user_id }))
-        }
-      },
+      body: { game: { players: players } },
       then: game => ({
         url: `/games/${game.id}`,
         method: 'PATCH',

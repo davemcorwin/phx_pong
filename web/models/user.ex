@@ -1,7 +1,6 @@
 defmodule PhxPong.User do
   use PhxPong.Web, :model
 
-  alias PhxPong.Game
   alias PhxPong.Player
 
   @defaults %{

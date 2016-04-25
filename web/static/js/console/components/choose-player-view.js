@@ -39,7 +39,10 @@ class ChoosePlayerView extends Component {
     this.setState({ [player]: item.user }, () => {
       const { player1, player2 } = this.state
       if (player1 && player2) {
-        this.props.createGame([player1, player2])
+        this.props.createGame([
+          { user_id: player1.id, position: 1 },
+          { user_id: player2.id, position: 2 }
+        ])
       }
     })
   }
@@ -58,9 +61,11 @@ class ChoosePlayerView extends Component {
 
     if (this.state.error) return <ErrorPage reason={this.state.error}/>
 
-    const menuItems = users.map(user => ({
-      title: user.name, user: user, stateful: true
-    }))
+    const menuItems =
+      users
+        .map(user => ({ title: user.name, user: user, stateful: true }))
+        .concat([{ title: 'Guest', user: { id: null }, stateful: true }])
+        .sort((a,b) => a.name - b.name)
 
     return (
       <div className="game-container">
@@ -85,15 +90,11 @@ class ChoosePlayerView extends Component {
 
 export default connect(props => ({
   usersFetch: '/users',
-  createGame: users => ({
+  createGame: players => ({
     createGameResult: {
       url: '/games',
       method: 'POST',
-      body: {
-        game: {
-          players: users.map(user => ({ user_id: user.id }))
-        }
-      }
+      body: { game: { players: players } }
     }
   })
 }))(ChoosePlayerView)

@@ -10,7 +10,7 @@ import {
   SettingsView,
   MainMenu } from './components'
 
-const FourOhFour = () => <h1>404 son!</h1>
+import { FourOhFourView } from './views'
 
 class Console extends Component {
 
@@ -23,15 +23,12 @@ class Console extends Component {
 
     KeyHandler.register(window)
 
-    Page('/',                             ctx => this.setState({ component: <MainMenu gameId={localStorage.gameId}/>}))
-    Page('/leaders',                      ctx => this.setState({ component: <LeaderboardView />}))
-    Page('/settings',                     ctx => this.setState({ component: <SettingsView />}))
-    Page('/game/new',                     ctx => this.setState({ component: <ChoosePlayerView />}))
-    Page('/game/:id',                     ctx => this.setState({ component: <GameView gameId={ctx.params.id} ctx={ctx}/>}))
-    // Page('/game_guest/new',               ctx => this.setState({ component: <GuestServingMenu />}))
-    // Page('/game_guest/play/:firstServer', ctx => this.setState({ component: <GuestPlay />}))
-
-    Page('*', ctx => this.setState({ component: <FourOhFour />}))
+    Page('/',         ctx => this.setState({ component: <MainMenu gameId={localStorage.gameId}/>}))
+    Page('/leaders',  ctx => this.setState({ component: <LeaderboardView />}))
+    Page('/settings', ctx => this.setState({ component: <SettingsView />}))
+    Page('/game/new', ctx => this.setState({ component: <ChoosePlayerView />}))
+    Page('/game/:id', ctx => this.setState({ component: <GameView gameId={ctx.params.id} />}))
+    Page('*',         ctx => this.setState({ component: <FourOhFourView />}))
 
     Page.start()
   }

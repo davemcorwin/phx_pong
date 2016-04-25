@@ -35,12 +35,14 @@ defmodule PhxPong.Repo.Migrations.CreatePong do
     create table(:players) do
       add :user_id, references(:users)
       add :game_id, references(:games)
-      add :score, :integer, default: 0
-      add :status, :string, default: "normal"
+      add :position, :integer
+      add :score,    :integer, default: 0
+      add :status,   :string, default: "normal"
     end
 
     create index(:players, [:user_id])
     create index(:players, [:game_id])
     create unique_index(:players, [:user_id, :game_id], name: :players_user_game_index)
+    create unique_index(:players, [:position, :game_id], name: :players_position_game_index)
   end
 end

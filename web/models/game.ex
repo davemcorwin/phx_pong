@@ -2,7 +2,6 @@ defmodule PhxPong.Game do
   use PhxPong.Web, :model
 
   alias PhxPong.Player
-  alias PhxPong.User
 
   @statuses ~w(pending in-progress complete)
 

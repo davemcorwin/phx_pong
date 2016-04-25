@@ -26,7 +26,6 @@ class MainMenu extends Component {
 
     const menuItems = [
       { title: "Play",    action: 'play',    target: "/game/new" },
-      // { title: "Guest",   action: 'guestPlay', target: "game_guest/new" },
       { title: "Leaders", action: 'leaders', target: "/leaders" },
       { title: "Settings", action: 'settings', target: "/settings" }
     ]
