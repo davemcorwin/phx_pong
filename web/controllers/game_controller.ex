@@ -15,7 +15,7 @@ defmodule PhxPong.GameController do
 
     case Repo.insert(changeset) do
       {:ok, game} ->
-        render(conn, :show, game: game)
+        render(conn, :show, game: (Repo.get!(Game, game.id) |> Repo.preload(:users)))
       {:error, changeset} ->
         conn
         |> put_status(:conflict)

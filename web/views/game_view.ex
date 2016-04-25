@@ -11,6 +11,14 @@ defmodule PhxPong.GameView do
     %{data: render("game.json", %{game: game})}
   end
 
+  def render("game.json", %{game: game}) do
+    game
+    |> Map.take([:id, :status, :winner, :first_server, :log])
+    |> Map.put(:players, render_many(game.players, PhxPong.PlayerView, "player.json"))
+    |> Map.put(:player1, render_one(Enum.find(game.players, &(&1.position == 1)), PhxPong.PlayerView, "player.json"))
+    |> Map.put(:player2, render_one(Enum.find(game.players, &(&1.position == 2)), PhxPong.PlayerView, "player.json"))
+  end
+
   def render("error.json", %{changeset: changeset}) do
     %{errors: Ecto.Changeset.traverse_errors(changeset, fn
       {msg, opts} -> String.replace(msg, "%{count}", to_string(opts[:count]))
@@ -23,13 +31,5 @@ defmodule PhxPong.GameView do
       {msg, opts} -> String.replace(msg, "%{count}", to_string(opts[:count]))
       msg -> msg
     end)}
-  end
-
-  def render("game.json", %{game: game}) do
-    game
-    |> Map.take([:id, :status, :winner, :first_server, :log])
-    |> Map.put(:players, render_many(game.players, PhxPong.PlayerView, "player.json"))
-    |> Map.put(:player1, render_one(Enum.at(game.players,0), PhxPong.PlayerView, "player.json"))
-    |> Map.put(:player2, render_one(Enum.at(game.players,1), PhxPong.PlayerView, "player.json"))
   end
 end

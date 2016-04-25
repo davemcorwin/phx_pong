@@ -50,9 +50,12 @@ defmodule PhxPong.UserView do
   end
 
   def opponent(game, user, users) do
-    (Enum.find users, fn _user ->
+    case (Enum.find users, fn _user ->
       _user.id == Enum.find(game.players, &(&1.user_id != user.id)).user_id
-    end).name
+    end) do
+      %User{} = user -> user.name
+      _ -> "Guest"
+    end
   end
 
   def score(game, user) do

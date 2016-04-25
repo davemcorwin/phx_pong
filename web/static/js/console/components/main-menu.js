@@ -1,6 +1,8 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
+
 import { Keys } from '../lib/key-handler'
+
 import Menu from './menu'
 import MenuItem from './menu-item'
 
@@ -25,8 +27,8 @@ class MainMenu extends Component {
     const { gameId } = this.props
 
     const menuItems = [
-      { title: "Play",    action: 'play',    target: "/game/new" },
-      { title: "Leaders", action: 'leaders', target: "/leaders" },
+      { title: "Play",     action: 'play',     target: "/game/new" },
+      { title: "Leaders",  action: 'leaders',  target: "/leaders" },
       { title: "Settings", action: 'settings', target: "/settings" }
     ]
 
