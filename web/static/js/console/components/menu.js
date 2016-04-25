@@ -8,14 +8,17 @@ class Menu extends Component {
   static propTypes = {
     items:      PT.arrayOf(PT.object),
     listens:    PT.array.isRequired,
-    onSelect:   PT.func,
-    onUnSelect: PT.func,
-    forceReset: PT.bool
+    onSelect:   PT.func.isRequired,
+    onUnSelect: PT.func
+  };
+
+  static defaultProps = {
+    onSelect:   () => {},
+    onUnSelect: () => {}
   };
 
   constructor() {
     super()
-    this.keyHandler = null
     this.state =  { highlighted: 0, selected: -1 }
   }
 
@@ -46,15 +49,12 @@ class Menu extends Component {
     const item = items[highlighted]
 
     if (selected === -1) {
-      this.setState({
-        selected: highlighted,
-        highlighted: -1
-      }, () => { if (onSelect) onSelect(item) })
+      if (item.stateful)
+        this.setState({ highlighted: -1, selected: highlighted }, () => onSelect(item))
+      else
+        this.setState({ highlighted: 0, selected: -1 }, () => onSelect(item))
     } else {
-      this.setState({
-        highlighted: selected,
-        selected: -1,
-      }, () => { if (onUnSelect) onUnSelect(item) })
+      this.setState({ highlighted: selected, selected: -1}, () => onUnSelect(item))
     }
   }
 
@@ -66,12 +66,6 @@ class Menu extends Component {
     if (selected !== -1) return
 
     this.setState({highlighted: (highlighted + 1) % items.length})
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.forceReset === true) {
-      this.setState({ highlighted: 0, selected: -1 })
-    }
   }
 
   render() {

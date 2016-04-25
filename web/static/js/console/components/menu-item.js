@@ -10,6 +10,11 @@ class MenuItem extends Component {
     selected:    PT.bool
   };
 
+  static defaultProps = {
+    highlighted: false,
+    selected:    false
+  };
+
   render() {
 
     const { highlighted, selected, title, label } = this.props

@@ -1,8 +1,8 @@
 export function isServer(game, player) {
 
-  if (game.status !== 'in-progress') return false
+  if (!inProgress(game)) return false
 
-  const totalScore = game.players.reduce((player, acc) => acc + player.score, 0),
+  const totalScore = game.players.reduce((acc, player) => acc + player.score, 0),
         modChanges = Math.floor(totalScore / 5) % 2
 
   return modChanges !== 0 ? (player.id === game.first_server) : (player.id !== game.first_server)

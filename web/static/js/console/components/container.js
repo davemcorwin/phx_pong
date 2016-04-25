@@ -1,23 +1,24 @@
 import React, { Component, PropTypes as PT } from 'react'
 import { connect, PromiseState } from 'react-refetch'
+
 import ErrorPage from './error-page'
 
 class Container extends Component {
 
   static propTypes = {
-    ps: PropTypes.instanceOf(PromiseState).isRequired,
-    onPending: PropTypes.func,
-    onRejection: PropTypes.func,
-    onFulfillment: PropTypes.func.isRequired,
+    ps:            PT.instanceOf(PromiseState).isRequired,
+    onPending:     PT.func,
+    onRejection:   PT.func,
+    onFulfillment: PT.func.isRequired,
   };
 
   static defaultProps = {
     onPending: (meta) => <div/>,
-    onRejection: (reason, meta) => <ErrorPage message={reason}/>,
+    onRejection: (reason, meta) => <ErrorPage reason={reason}/>,
   };
 
   render() {
-    
+
     const { ps, onPending, onRejection, onFulfillment } = this.props
 
     if (ps.pending) {

@@ -1,8 +1,12 @@
 import React, { Component, PropTypes as PT } from 'react'
+import Update from 'react-addons-update'
 import { PromiseState } from 'react-refetch'
+
 import connect from '../lib/api'
 import * as Game from '../lib/game'
 import Settings from '../lib/settings'
+import { Keys } from '../lib/key-handler'
+
 import PlayerPanel    from './player-panel'
 import EndGameMessage from './end-game-message'
 import ServingMenu    from './serving-menu'
@@ -19,7 +23,7 @@ export class GameView extends Component {
 
     if (!Game.inProgress(game)) return
 
-    let score = player.score + 1
+    let score = 1
     const log = [player.id]
 
     if (Settings.nbaJamMode && Game.playerStatus(game, player) === 'on-fire') {
@@ -28,9 +32,9 @@ export class GameView extends Component {
     }
 
     const playerIdx = game.players.findIndex(val => val.id === player.id)
-    const newGame = update(game, {
+    const newGame = Update(game, {
       log: {$push: log},
-      players: {$splice: [[playerIdx, 1, update(player, { score: x => x + score }) ]]}
+      players: {$splice: [[playerIdx, 1, Update(player, { score: { $apply: x => x + score } }) ]]}
     })
 
     this.props.updateGame(newGame)
@@ -40,36 +44,40 @@ export class GameView extends Component {
 
     const { gameFetch, updateGame } = this.props
 
-    <Container ps={gameFetch} onFulfillment={game => {
+    return (
+      <Container ps={gameFetch} onFulfillment={game => {
 
-      const { player1, player2 } = game
+        const { player1, player2 } = game
 
-      return (
-        <div className="game-container">
-          <PlayerPanel
-            isServer={Game.isServer(game, player1)}
-            key={Keys.LEFT}
-            onScore={this.handleScore.bind(this, game, player1)}
-            player={player1}
-            playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player1)} />
+        return (
+          <div className="game-container">
+            <PlayerPanel
+              active={Game.inProgress(game)}
+              isServer={Game.isServer(game, player1)}
+              listenKey={Keys.LEFT}
+              onScore={this.handleScore.bind(this, game, player1)}
+              player={player1}
+              playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player1)} />
 
-          <PlayerPanel
-            isServer={Game.isServer(game, player2)}
-            key={Keys.RIGHT}
-            onScore={this.handleScore.bind(this, game, player2)}
-            player={player2}
-            playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player2)} />
+            <PlayerPanel
+              active={Game.inProgress(game)}
+              isServer={Game.isServer(game, player2)}
+              listenKey={Keys.RIGHT}
+              onScore={this.handleScore.bind(this, game, player2)}
+              player={player2}
+              playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player2)} />
 
-          { Game.isPending(game) ?
-              <ServingMenu game={game} onChoose={updateGame}/> : null
-          }
+            { Game.isPending(game) ?
+                <ServingMenu game={game} onChoose={updateGame}/> : null
+            }
 
-          { Game.isOver(game) ?
-              <EndGameMessage game={game} winner={Game.winner(game)} /> : null
-          }
-        </div>
-      )
-    }} />
+            { Game.isOver(game) ?
+                <EndGameMessage game={game} winner={Game.winner(game)} /> : null
+            }
+          </div>
+        )
+      }} />
+    )
   }
 }
 
@@ -79,7 +87,8 @@ export default connect(props => ({
     gameFetch: {
       url: `/games/${props.gameId}`,
       method: 'PATCH',
-      body: JSON.stringify({ game: game })
+      body: { game },
+      refreshing: true
     }
   })
 }))(GameView)

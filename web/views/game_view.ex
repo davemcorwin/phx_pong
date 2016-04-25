@@ -4,11 +4,11 @@ defmodule PhxPong.GameView do
   alias PhxPong.Game
 
   def render("index.json", %{games: games}) do
-    %{games: render_many(games, PhxPong.GameView, "game.json")}
+    %{data: render_many(games, PhxPong.GameView, "game.json")}
   end
 
   def render("show.json", %{game: game}) do
-    %{game: render("game.json", %{game: game})}
+    %{data: render("game.json", %{game: game})}
   end
 
   def render("error.json", %{changeset: changeset}) do
@@ -19,7 +19,7 @@ defmodule PhxPong.GameView do
   end
 
   def render("error.json", %{game: game}, %{changeset: changeset}) do
-    %{game: render("game.json", game), errors: Ecto.Changeset.traverse_errors(changeset, fn
+    %{data: render("game.json", game), errors: Ecto.Changeset.traverse_errors(changeset, fn
       {msg, opts} -> String.replace(msg, "%{count}", to_string(opts[:count]))
       msg -> msg
     end)}

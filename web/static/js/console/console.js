@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Page from 'page'
+
 import KeyHandler from './lib/key-handler'
+
 import {
   ChoosePlayerView,
   GameView,

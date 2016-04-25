@@ -1,66 +1,47 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
-import Api from '../lib/api'
+import { PromiseState } from 'react-refetch'
+
+import connect from '../lib/api'
 import { Keys } from '../lib/key-handler'
+
 import PlayerMenu from './player-menu'
 import ErrorPage from './error-page'
+import Container  from './container'
 
 class ChoosePlayerView extends Component {
 
+  static propTypes = {
+    usersFetch: PT.instanceOf(PromiseState).isRequired,
+    createGame: PT.func.isRequired,
+    createGameResult: PT.instanceOf(PromiseState),
+  };
+
   constructor() {
     super()
-    this.state = {
-      status: 'pending',
-      players: [],
-      player1: null,
-      player2: null
-    }
+    this.state = { player1: null, player2: null }
   }
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
 
-    Api.get('players')
-      .then(response =>
-        this.setState({ status: 'ready', players: response.data.data })
-      )
-      .catch(response => {
-        if (response instanceof Error) {
-          this.setState({ status: 'error', message: response.message })
-        } else {
-          this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
-        }
-      })
-  }
+    const { createGameResult } = nextProps
 
-  componentWillUpdate(_, nextState) {
-
-    const { player1, player2, status } = nextState
-
-    if (status !== 'error' && player1 && player2) {
-      Api.post('games', {
-        game: {
-          players: [
-            { user_id: player1.id },
-            { user_id: player2.id }
-          ],
-          status: 'pending'
-        }
-      })
-      .then(response =>
-        Page(`/game/${response.data.game.id}`)
-      )
-      .catch(response => {
-        if (response instanceof Error) {
-          this.setState({ status: 'error', message: response.message })
-        } else {
-          this.setState({ status: 'error', message: `${response.status}: ${JSON.stringify(response.data.errors)}` })
-        }
-      })
+    if (createGameResult) {
+      if (createGameResult.fulfilled) {
+        Page(`/game/${createGameResult.value.id}`)
+      } else if (createGameResult.rejected) {
+        this.setState({error: createGameResult.reason})
+      }
     }
   }
 
   selectPlayer(player, item) {
-    this.setState({ [player]: item.player })
+    this.setState({ [player]: item.user }, () => {
+      const { player1, player2 } = this.state
+      if (player1 && player2) {
+        this.props.createGame([player1, player2])
+      }
+    })
   }
 
   unSelectPlayer(player) {
@@ -68,23 +49,18 @@ class ChoosePlayerView extends Component {
   }
 
   render() {
-    switch(this.state.status) {
-      case 'pending':
-        return null
-      case 'error':
-        return <ErrorPage message={this.state.message} />
-      default:
-        return this.view()
-    }
+    return (
+      <Container ps={this.props.usersFetch} onFulfillment={::this.view} />
+    )
   }
 
-  view() {
+  view(users) {
 
-    const { players } = this.state
+    if (this.state.error) return <ErrorPage reason={this.state.error}/>
 
-    const menuItems = players.map(player => {
-      return { title: player.name, player: player }
-    })
+    const menuItems = users.map(user => ({
+      title: user.name, user: user, stateful: true
+    }))
 
     return (
       <div className="game-container">
@@ -107,4 +83,17 @@ class ChoosePlayerView extends Component {
   }
 }
 
-export default ChoosePlayerView
+export default connect(props => ({
+  usersFetch: '/users',
+  createGame: users => ({
+    createGameResult: {
+      url: '/games',
+      method: 'POST',
+      body: {
+        game: {
+          players: users.map(user => ({ user_id: user.id }))
+        }
+      }
+    }
+  })
+}))(ChoosePlayerView)

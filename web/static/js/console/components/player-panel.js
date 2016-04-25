@@ -1,15 +1,17 @@
 import React, { Component, PropTypes as PT } from 'react'
+import Page from 'page'
 import KeyHandler, { Events, Keys } from '../lib/key-handler'
 import { Player } from '../types'
 
 class PlayerPanel extends Component {
 
   static propTypes = {
+    active:       PT.bool,
     isServer:     PT.bool.isRequired,
-    key:          PT.number.isRequired,
+    listenKey:    PT.number.isRequired,
     onScore:      PT.func.isRequired,
     player:       Player.isRequired,
-    playerStatus: PT.string.isRequired,
+    playerStatus: PT.oneOfType([PT.string, PT.bool]).isRequired,
   };
 
   constructor() {
@@ -22,7 +24,7 @@ class PlayerPanel extends Component {
   }
 
   componentDidMount() {
-    this.keyHandler = KeyHandler.addListener(key, ::this.handleKey)
+    this.keyHandler = KeyHandler.addListener(this.props.listenKey, ::this.handleKey)
   }
 
   componentWillUnmount() {
@@ -36,8 +38,10 @@ class PlayerPanel extends Component {
     }
   }
 
-  handleKey(event, key) {
+  handleKey(event) {
 
+    if (!this.props.active) return
+    
     switch(event) {
 
       case Events.HOLD:
