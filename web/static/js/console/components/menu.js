@@ -79,9 +79,8 @@ class Menu extends Component {
           <MenuItem
             title={item.title}
             label={item.label}
-            highlighted={highlighted === idx}
-            selected={selected === idx}
-            key={`item${idx}`}
+            status={highlighted === idx ? 'active' : selected === idx ? 'selected' : null}
+            key={idx}
           />)
         }
       </div>

@@ -30,67 +30,6 @@ img {
   padding-right: 50px;
 }
 
-
-/* Menu Item Styles */
-.menu-item {
-  font-size: 40px;
-  text-transform: uppercase;
-}
-
-.menu-item.label{
-  padding-right: 40px;
-}
-
-/* Menu Item selected */
-.menu-item.selected {
-  color: rgba(28, 148, 1, 1);
-}
-
-.menu-item.selected:before {
-  content: '\25b6\00a0';
-}
-
-.menu-item.selected:after {
-  content: '\00a0\25C0';
-}
-
-/* Menu Item active */
-.menu-item.active {
-  animation: pulse 1s linear infinite;
-  -webkit-animation: pulse 1s linear infinite;
-  -moz-animation: pulse 1s linear infinite;
-}
-
-.menu-item.active a {
-  text-decoration: none;
-}
-
-.menu-item.active:before {
-  content: '\25b6\00a0';
-}
-
-.menu-item.active:after {
-  content: '\00a0\25C0';
-}
-
-@keyframes pulse {
-   0% { color: rgba(250, 25, 25, 1); }
-   90% { color: rgba(255,0,0,0.0); }
-   100% { color: rgba(255,0,0,1.0); }
-}
-
-@-moz-keyframes pulse {
- 0% { color: rgba(165, 25, 25, 1); }
- 90% { color: rgba(255,0,0,0.0); }
- 100% { color: rgba(255,0,0,1.0); }
-}
-
-@-webkit-keyframes pulse {
- 0% { color: rgba(165, 25, 25, 1); }
- 90% { color: rgba(255,0,0,0.0); }
- 100% { color: rgba(255,0,0,1.0); }
-}
-
 .game-credits {
   position: fixed;
   bottom: 20px;

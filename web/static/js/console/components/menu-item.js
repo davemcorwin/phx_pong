@@ -1,33 +1,25 @@
 import React, { Component, PropTypes as PT } from 'react'
-import Classnames from 'classnames'
+import classnames from 'classnames'
+import styles from './menu-item.scss'
 
 class MenuItem extends Component {
 
   static propTypes = {
-    label:       PT.string,
-    title:       PT.string,
-    highlighted: PT.bool,
-    selected:    PT.bool
-  };
-
-  static defaultProps = {
-    highlighted: false,
-    selected:    false
+    label:  PT.string,
+    title:  PT.string,
+    status: PT.string
   };
 
   render() {
 
-    const { highlighted, selected, title, label } = this.props
-
-    const classes = Classnames('menu-item', {
-      'active':   highlighted,
-      'selected': selected
-    })
+    const { status, title, label } = this.props
 
     return (
       <p>
-        { label ? <span className="menu-item label">{label}</span> : null }
-        <span className={classes}>{title}</span>
+        { label ? <span className={classnames(styles['menu-item'], styles.label)}>{label}</span> : null }
+        <span className={classnames(styles['menu-item'], styles[`menu-item_${status}`])}>
+          {title}
+        </span>
       </p>
     )
   }

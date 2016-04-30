@@ -1,0 +1,36 @@
+@keyframes pulse {
+  0%   { color: rgba(250, 25, 25, 1); }
+  90%  { color: rgba(255,0,0,0.0); }
+  100% { color: rgba(255,0,0,1.0); }
+}
+
+@-webkit-keyframes pulse {
+  0%   { color: rgba(250, 25, 25, 1); }
+  90%  { color: rgba(255,0,0,0.0); }
+  100% { color: rgba(255,0,0,1.0); }
+}
+
+@-moz-keyframes pulse {
+  0%   { color: rgba(250, 25, 25, 1); }
+  90%  { color: rgba(255,0,0,0.0); }
+  100% { color: rgba(255,0,0,1.0); }
+}
+
+.menu-item{
+  font-size: 40px;
+  text-transform: uppercase;
+}
+
+.menu-item_selected{
+  color: rgba(28, 148, 1, 1);
+}
+
+.menu-item_active{
+  animation: pulse 1s linear infinite;
+  -webkit-animation: pulse 1s linear infinite;
+  -moz-animation: pulse 1s linear infinite;
+  &:before{ content: '\25b6 '; }
+  &:after{ content: ' \25c0'; }
+}
+
+.label { padding-right: 40px; }
