@@ -16,16 +16,16 @@
   100% { color: rgba(255,0,0,1.0); }
 }
 
-.menu-item{
+.menuItem{
   font-size: 40px;
   text-transform: uppercase;
 }
 
-.menu-item_selected{
+.selected{
   color: rgba(28, 148, 1, 1);
 }
 
-.menu-item_active{
+.active{
   animation: pulse 1s linear infinite;
   -webkit-animation: pulse 1s linear infinite;
   -moz-animation: pulse 1s linear infinite;

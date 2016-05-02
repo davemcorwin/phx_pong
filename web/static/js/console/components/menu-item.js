@@ -12,11 +12,11 @@ export default class MenuItem extends Component {
   };
 
   labelStyles() {
-    classnames(styles['menu-item'], styles.label)
+    return classnames(styles.menuItem, styles.label)
   }
 
   menuItemStyles() {
-    classnames(styles['menu-item'], styles[`menu-item_${this.props.status}`])
+    return classnames(styles.menuItem, styles[this.props.status])
   }
 
   render() {
