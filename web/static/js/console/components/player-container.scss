@@ -1,0 +1,53 @@
+.playerContainer{
+  width: 49%;
+  height: 100vh;
+  text-align: center;
+  font-size: 5vh;
+  margin-top: 20px;
+  position: relative;
+
+  &:nth-child(1) {
+    float: left;
+    border-right: 5px solid white;
+  }
+
+  &:nth-child(2) {
+    float: right;
+  }
+}
+
+.heating-up{
+  border-width: 20px;
+  border-style: solid;
+  animation: border-pulse 2s linear infinite;
+  -webkit-animation: border-pulse 2s linear infinite;
+  -moz-animation: border-pulse 2s linear infinite;
+}
+
+.flames{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-right: 0px;
+  z-index: -1;
+  display: none;
+}
+
+@keyframes border-pulse {
+   0% { border-color: rgba(250, 25, 25, 1); }
+   50% { border-color: rgba(255,0,0,0.0); }
+   100% { border-color: rgba(255,0,0,1.0); }
+}
+
+@-moz-keyframes border-pulse {
+  0% { border-color: rgba(250, 25, 25, 1); }
+  50% { border-color: rgba(255,0,0,0.0); }
+  100% { border-color: rgba(255,0,0,1.0); }
+}
+
+@-webkit-keyframes border-pulse {
+  0% { border-color: rgba(250, 25, 25, 1); }
+  50% { border-color: rgba(255,0,0,0.0); }
+  100% { border-color: rgba(255,0,0,1.0); }
+}

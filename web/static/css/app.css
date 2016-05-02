@@ -30,33 +30,6 @@ img {
   padding-right: 50px;
 }
 
-.game-credits {
-  position: fixed;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-}
-
-.player-container {
-  width: 49%;
-  height: 100vh;
-}
-
-.player-container{
-  text-align: center;
-  font-size: 5vh;
-  margin-top: 20px;
-  position: relative;
-}
-
-.player-container:nth-child(1) {
-  float: left;
-  border-right: 5px solid white;
-}
-
-.player-container:nth-child(2) {
-  float: right;
-}
 
 .serving-message {
   width: 20vw;
@@ -67,76 +40,6 @@ img {
   padding: 10px;
   border: 2px solid red;
   border-radius: 5px;
-}
-
-.player-container.serving-message {
-  font-size: 5vh;
-}
-
-.player-container .score {
-  font-size: 45vh;
-  margin-top: 20vh;
-}
-
-.left {
-  float: left;
-  border-right: 5px solid white;
-}
-
-.right {
-  float: right;
-}
-
-.game-message {
-  position: absolute;
-  left: 50%;
-  top: 20vh;
-  padding: 0px;
-  border: 5px solid white;
-  border-radius: 5px;
-  width: 50%;
-  margin-left: -27%;
-  background: black;
-}
-
-.game-message p {
-  line-height: 72px;
-  font-size: 36px;
-  border: 1px solid white;
-  border-radius: 5px;
-  margin: 5px;
-  padding: 10px;
-}
-
-/* Leader Board */
-.leader-board-title {
-  font-size: 80px;
-  margin-bottom: 70px;
-  text-align: center;
-}
-
-.leader-board {
-  list-style-type: none;
-  font-size: 50px;
-  margin: auto;
-  width: 85%;
-}
-
-.leader-board li {
-  margin-bottom: 20px;
-}
-
-.leader-board .name {
-  text-align: left;
-}
-
-.leader-board .record {
-  text-align: right;
-  float: right;
-}
-
-.hide {
-  display: none;
 }
 
 .navbar + .docs-section {
@@ -238,44 +141,4 @@ input, textarea {
     background-color: #F2D7D5;
     border-left-color: #C0392B;
     color: #C0392B;
-}
-
-.player-container.heating-up{
-  border-width: 20px;
-  border-style: solid;
-  animation: border-pulse 2s linear infinite;
-  -webkit-animation: border-pulse 2s linear infinite;
-  -moz-animation: border-pulse 2s linear infinite;
-}
-
-img.flames{
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding-right: 0px;
-  z-index: -1;
-  display: none;
-}
-
-.player-container.on-fire img.flames{
-  display: block;
-}
-
-@keyframes border-pulse {
-   0% { border-color: rgba(250, 25, 25, 1); }
-   50% { border-color: rgba(255,0,0,0.0); }
-   100% { border-color: rgba(255,0,0,1.0); }
-}
-
-@-moz-keyframes border-pulse {
-  0% { border-color: rgba(250, 25, 25, 1); }
-  50% { border-color: rgba(255,0,0,0.0); }
-  100% { border-color: rgba(255,0,0,1.0); }
-}
-
-@-webkit-keyframes border-pulse {
-  0% { border-color: rgba(250, 25, 25, 1); }
-  50% { border-color: rgba(255,0,0,0.0); }
-  100% { border-color: rgba(255,0,0,1.0); }
 }

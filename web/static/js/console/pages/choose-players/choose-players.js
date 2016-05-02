@@ -2,14 +2,17 @@ import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 import { PromiseState } from 'react-refetch'
 
-import connect from '../lib/api'
-import { Keys } from '../lib/key-handler'
+import connect from '../../lib/api'
+import { Keys } from '../../lib/key-handler'
+import { GameLayout } from '../../layouts'
+import {
+  Container,
+  ErrorPage,
+  Menu,
+  PlayerContainer
+} from '../../components'
 
-import PlayerMenu from './player-menu'
-import ErrorPage from './error-page'
-import Container  from './container'
-
-class ChoosePlayerView extends Component {
+export class ChoosePlayers extends Component {
 
   static propTypes = {
     usersFetch: PT.instanceOf(PromiseState).isRequired,
@@ -28,7 +31,7 @@ class ChoosePlayerView extends Component {
 
     if (createGameResult) {
       if (createGameResult.fulfilled) {
-        Page(`/game/${createGameResult.value.id}`)
+        Page(`${createGameResult.value.id}`)
       } else if (createGameResult.rejected) {
         this.setState({error: createGameResult.reason})
       }
@@ -68,22 +71,24 @@ class ChoosePlayerView extends Component {
         .sort((a,b) => a.name - b.name)
 
     return (
-      <div className="game-container">
-        <PlayerMenu
-          menuItems={menuItems}
-          listens={[Keys.LEFT]}
-          handleSelect={this.selectPlayer.bind(this, 'player1')}
-          handleUnSelect={this.unSelectPlayer.bind(this, 'player1')}
-          side="left"
-        />
-        <PlayerMenu
-          menuItems={menuItems}
-          listens={[Keys.RIGHT]}
-          handleSelect={this.selectPlayer.bind(this, 'player2')}
-          handleUnSelect={this.unSelectPlayer.bind(this, 'player2')}
-          side="right"
-        />
-      </div>
+      <GameLayout>
+        <PlayerContainer title="Choose Player">
+          <Menu
+            items={menuItems}
+            listens={[Keys.LEFT]}
+            onSelect={this.selectPlayer.bind(this, 'player1')}
+            onUnSelect={this.unSelectPlayer.bind(this, 'player1')}
+          />
+        </PlayerContainer>
+        <PlayerContainer title="Choose Player">
+          <Menu
+            items={menuItems}
+            listens={[Keys.RIGHT]}
+            onSelect={this.selectPlayer.bind(this, 'player2')}
+            onUnSelect={this.unSelectPlayer.bind(this, 'player2')}
+          />
+        </PlayerContainer>
+      </GameLayout>
     )
   }
 }
@@ -97,4 +102,4 @@ export default connect(props => ({
       body: { game: { players: players } }
     }
   })
-}))(ChoosePlayerView)
+}))(ChoosePlayers)

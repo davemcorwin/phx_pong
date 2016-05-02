@@ -1,6 +1,6 @@
 import React, { Component, PropTypes as PT } from 'react'
 
-class ErrorPage extends Component {
+export default class ErrorPage extends Component {
 
   static propTypes = {
     reason: PT.shape({
@@ -21,5 +21,3 @@ class ErrorPage extends Component {
     )
   }
 }
-
-export default ErrorPage

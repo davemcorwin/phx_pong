@@ -1,10 +1,11 @@
 import React, { Component, PropTypes as PT } from 'react'
-import Api from '../lib/api'
-import { Game } from '../types'
-import { Keys } from '../lib/key-handler'
-import Menu from './menu'
 
-class ServingMenu extends Component {
+import Api      from '../../lib/api'
+import { Keys } from '../../lib/key-handler'
+import { GameMessage, Menu } from '../../components'
+import { Game } from '../../types'
+
+export default class ServingMenu extends Component {
 
   static propTypes = {
     game: Game.isRequired,
@@ -25,16 +26,13 @@ class ServingMenu extends Component {
     ]
 
     return (
-      <div className="game-message">
-        <p>Who serves first?</p>
+      <GameMessage messages={['Who serves first?']}>
         <Menu
           items={menuItems}
           listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={::this.onSelect}
         />
-      </div>
+      </GameMessage>
     )
   }
 }
-
-export default ServingMenu

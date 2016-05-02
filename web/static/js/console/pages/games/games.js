@@ -2,17 +2,19 @@ import React, { Component, PropTypes as PT } from 'react'
 import Update from 'react-addons-update'
 import { PromiseState } from 'react-refetch'
 
-import connect from '../lib/api'
-import * as Game from '../lib/game'
-import Settings from '../lib/settings'
-import { Keys } from '../lib/key-handler'
-
+import connect        from '../../lib/api'
+import * as Game      from '../../lib/game'
+import { Keys }       from '../../lib/key-handler'
+import Container      from '../../components'
 import PlayerPanel    from './player-panel'
 import EndGameMessage from './end-game-message'
 import ServingMenu    from './serving-menu'
-import Container      from './container'
 
-export class GameView extends Component {
+export class Games extends Component {
+
+  static contextTypes = {
+    nbaJamMode: PT.bool.isRequired
+  };
 
   static propTypes = {
     gameFetch: PT.instanceOf(PromiseState).isRequired,
@@ -23,10 +25,12 @@ export class GameView extends Component {
 
     if (!Game.inProgress(game)) return
 
+    const { nbaJamMode } = this.context
+
     let score = 1
     const log = [player.id]
 
-    if (Settings.nbaJamMode && Game.playerStatus(game, player) === 'on-fire') {
+    if (nbaJamMode && Game.playerStatus(game, player) === 'on-fire') {
       score += 1
       log.push(player.id)
     }
@@ -42,6 +46,7 @@ export class GameView extends Component {
 
   render() {
 
+    const { nbaJamMode } = this.context
     const { gameFetch, updateGame } = this.props
 
     return (
@@ -50,14 +55,14 @@ export class GameView extends Component {
         const { player1, player2 } = game
 
         return (
-          <div className="game-container">
+          <div>
             <PlayerPanel
               active={Game.inProgress(game)}
               isServer={Game.isServer(game, player1)}
               listenKey={Keys.LEFT}
               onScore={this.handleScore.bind(this, game, player1)}
               player={player1}
-              playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player1)} />
+              playerStatus={nbaJamMode && Game.playerStatus(game, player1)} />
 
             <PlayerPanel
               active={Game.inProgress(game)}
@@ -65,7 +70,7 @@ export class GameView extends Component {
               listenKey={Keys.RIGHT}
               onScore={this.handleScore.bind(this, game, player2)}
               player={player2}
-              playerStatus={Settings.nbaJamMode && Game.playerStatus(game, player2)} />
+              playerStatus={nbaJamMode && Game.playerStatus(game, player2)} />
 
             { Game.isPending(game) ?
                 <ServingMenu game={game} onChoose={updateGame}/> : null
@@ -91,4 +96,4 @@ export default connect(props => ({
       refreshing: true
     }
   })
-}))(GameView)
+}))(Games)

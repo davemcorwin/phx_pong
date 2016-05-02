@@ -1,9 +1,10 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Classnames from 'classnames'
+
 import KeyHandler, { Events } from '../lib/key-handler'
 import MenuItem from './menu-item'
 
-class Menu extends Component {
+export default class Menu extends Component {
 
   static propTypes = {
     items:      PT.arrayOf(PT.object),
@@ -87,5 +88,3 @@ class Menu extends Component {
     )
   }
 }
-
-export default Menu

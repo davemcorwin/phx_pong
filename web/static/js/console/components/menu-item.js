@@ -1,8 +1,9 @@
 import React, { Component, PropTypes as PT } from 'react'
 import classnames from 'classnames'
+
 import styles from './menu-item.scss'
 
-class MenuItem extends Component {
+export default class MenuItem extends Component {
 
   static propTypes = {
     label:  PT.string,
@@ -10,19 +11,25 @@ class MenuItem extends Component {
     status: PT.string
   };
 
+  labelStyles() {
+    classnames(styles['menu-item'], styles.label)
+  }
+
+  menuItemStyles() {
+    classnames(styles['menu-item'], styles[`menu-item_${this.props.status}`])
+  }
+
   render() {
 
-    const { status, title, label } = this.props
+    const { title, label } = this.props
 
     return (
       <p>
-        { label ? <span className={classnames(styles['menu-item'], styles.label)}>{label}</span> : null }
-        <span className={classnames(styles['menu-item'], styles[`menu-item_${status}`])}>
+        { label ? <span className={this.labelStyles()}>{label}</span> : null }
+        <span className={this.menuItemStyles()}>
           {title}
         </span>
       </p>
     )
   }
 }
-
-export default MenuItem

@@ -2,15 +2,16 @@ import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 import { PromiseState } from 'react-refetch'
 
-import connect from '../lib/api'
-import Paginator from '../lib/paginator'
-import { Keys } from '../lib/key-handler'
+import connect from '../../lib/api'
+import Paginator from '../../lib/paginator'
+import { Keys } from '../../lib/key-handler'
+
+import { Container, Menu } from '../../components'
+import { MenuLayout } from '../../layouts'
 
 import Leaderboard from './leaderboard'
-import Menu from './menu'
-import Container from './container'
 
-export class LeaderboardView extends Component {
+class Leaders extends Component {
 
   static propTypes = {
     usersFetch: PT.instanceOf(PromiseState).isRequired,
@@ -50,22 +51,18 @@ export class LeaderboardView extends Component {
       menuItems.unshift({ title: "Previous",  action: "prev" })
 
     return (
-      <div>
-        <h1 className="leader-board-title">
-          <img src="/images/rocket.png" />Leaders
-        </h1>
+      <MenuLayout title="Leaders">
         <Leaderboard users={paginator.page()} />
         <Menu
           items={menuItems}
           listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={this.onSelect.bind(this, paginator)}
         />
-        <p className="game-credits">&copy; LaunchPad Lab 2015</p>
-      </div>
+      </MenuLayout>
     )
   }
 }
 
 export default connect(props => ({
   usersFetch: '/users'
-}))(LeaderboardView)
+}))(Leaders)

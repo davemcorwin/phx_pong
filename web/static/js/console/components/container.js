@@ -3,7 +3,7 @@ import { connect, PromiseState } from 'react-refetch'
 
 import ErrorPage from './error-page'
 
-class Container extends Component {
+export default class Container extends Component {
 
   static propTypes = {
     ps:            PT.instanceOf(PromiseState).isRequired,
@@ -33,5 +33,3 @@ class Container extends Component {
     }
   }
 }
-
-export default Container
