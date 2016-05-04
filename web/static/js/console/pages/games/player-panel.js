@@ -1,9 +1,11 @@
 import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
-import KeyHandler, { Events, Keys } from '../lib/key-handler'
-import { Player } from '../types'
 
-class PlayerPanel extends Component {
+import KeyHandler, { Events, Keys } from '../../lib/key-handler'
+import { Player } from '../../types'
+import { PlayerContainer } from '../../components'
+
+export default class PlayerPanel extends Component {
 
   static propTypes = {
     active:       PT.bool,
@@ -41,7 +43,7 @@ class PlayerPanel extends Component {
   handleKey(event) {
 
     if (!this.props.active) return
-    
+
     switch(event) {
 
       case Events.HOLD:
@@ -57,15 +59,25 @@ class PlayerPanel extends Component {
 
     const { isServer, player, playerStatus } = this.props
 
+    const scoreStyles = {
+      marginTop: '2vh',
+      fontSize: '20vw'
+    }
+
+    const servingMsgStyles = {
+      fontSize: '5vh'
+    }
+
     return (
-      <div className={`player-container ${playerStatus}`}>
-        <p className="player-name">{player.name || 'Unknown'}</p>
-        <h1 className="score">{player.score}</h1>
-        { isServer ? <span className="serving-message">Serving</span> : null }
-        <img src="/images/flame.gif" className="flames"/>
-      </div>
+      <PlayerContainer
+        status={playerStatus}
+        title={player.name || 'Unknown'}>
+
+        <p style={scoreStyles}>{player.score}</p>
+
+        { isServer ? <span style={servingMsgStyles}>Serving</span> : null }
+
+      </PlayerContainer>
     )
   }
 }
-
-export default PlayerPanel

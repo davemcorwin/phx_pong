@@ -1,5 +1,7 @@
 import React, { Component, PropTypes as PT } from 'react'
-import { User } from '../types'
+
+import { User } from '../../types'
+import styles from './leaderboard.scss'
 
 class Leaderboard extends Component {
 
@@ -10,11 +12,11 @@ class Leaderboard extends Component {
   render() {
 
     return (
-      <ul className="leader-board">
+      <ul className={styles.leaderboard}>
         { this.props.users.map(user =>
             <li key={user.name}>
-              <span className="name">{user.name}</span>
-              <span className="record">{user.wins} - {user.losses}</span>
+              <span className={styles.name}>{user.name}</span>
+              <span className={styles.record}>{user.wins} - {user.losses}</span>
             </li>
           )
         }

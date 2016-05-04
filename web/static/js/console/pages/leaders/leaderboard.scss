@@ -1,0 +1,19 @@
+.leaderboard {
+  list-style-type: none;
+  font-size: 50px;
+  margin: auto;
+  width: 85%;
+
+  li {
+    margin-bottom: 20px;
+  }
+}
+
+.name {
+  text-align: left;
+}
+
+.record {
+  text-align: right;
+  float: right;
+}

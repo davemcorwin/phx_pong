@@ -2,19 +2,18 @@ import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 import { PromiseState } from 'react-refetch'
 
-import connect from '../lib/api'
-import { Keys } from '../lib/key-handler'
-import { Game, Player } from '../types'
-
-import Menu from './menu'
+import connect from '../../lib/api'
+import { Keys } from '../../lib/key-handler'
+import { Game, Player } from '../../types'
+import { GameMessage, Menu } from '../../components'
 
 export class EndGameMessage extends Component {
 
   static propTypes = {
     createGame:       PT.func.isRequired,
     createGameResult: PT.instanceOf(PromiseState),
-    game:    Game.isRequired,
-    winner:  Player.isRequired
+    game:             Game.isRequired,
+    winner:           Player.isRequired
   };
 
   componentDidMount() {
@@ -24,7 +23,7 @@ export class EndGameMessage extends Component {
   componentWillReceiveProps(nextProps) {
     const { createGameResult } = nextProps
     if (createGameResult && createGameResult.fulfilled) {
-      Page(`/game/${createGameResult.value.id}`)
+      Page(`/games/${createGameResult.value.id}`)
     }
   }
 
@@ -58,15 +57,13 @@ export class EndGameMessage extends Component {
     ]
 
     return (
-      <div className="game-message">
-        <p>{winner.name} Wins!</p>
-        { winner.taunt ? <p>{winner.taunt}</p> : null }
+      <GameMessage messages={[`${winner.name} Wins!`, winner.taunt]}>
         <Menu
           items={menuItems}
           listens={[Keys.LEFT, Keys.RIGHT]}
           onSelect={::this.onSelect}
         />
-      </div>
+      </GameMessage>
     )
   }
 }

@@ -1,34 +1,47 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes as PT } from 'react'
 import Page from 'page'
 
 import KeyHandler from './lib/key-handler'
-
 import {
-  ChoosePlayerView,
-  GameView,
-  LeaderboardView,
-  SettingsView,
-  MainMenu } from './components'
+  ChoosePlayers,
+  FourOhFour,
+  Games,
+  Leaders,
+  MainMenu,
+  Settings
+} from './pages'
 
-import { FourOhFourView } from './views'
+export default class Console extends Component {
 
-class Console extends Component {
+  static childContextTypes = {
+    nbaJamMode: PT.bool
+  };
+
+  updateSettings(settings) {
+    this.setState(settings, () => localStorage.nbaJamMode = this.state.nbaJamMode)
+  }
 
   constructor() {
     super()
     this.state = { component: <div /> }
   }
 
+  getChildContext() {
+    return { nbaJamMode: this.state.nbaJamMode }
+  }
+
   componentDidMount() {
 
     KeyHandler.register(window)
 
-    Page('/',         ctx => this.setState({ component: <MainMenu gameId={localStorage.gameId}/>}))
-    Page('/leaders',  ctx => this.setState({ component: <LeaderboardView />}))
-    Page('/settings', ctx => this.setState({ component: <SettingsView />}))
-    Page('/game/new', ctx => this.setState({ component: <ChoosePlayerView />}))
-    Page('/game/:id', ctx => this.setState({ component: <GameView gameId={ctx.params.id} />}))
-    Page('*',         ctx => this.setState({ component: <FourOhFourView />}))
+    Page('/',               ctx => this.setState({ component: <MainMenu gameId={localStorage.gameId}/>}))
+    Page('/leaders',        ctx => this.setState({ component: <Leaders />}))
+    Page('/settings',       ctx => this.setState({ component: <Settings update={::this.updateSettings}/>}))
+    Page('/choose-players', ctx => this.setState({ component: <ChoosePlayers />}))
+    Page('/games/:id',      ctx => this.setState({ component: <Games gameId={ctx.params.id} />}))
+    Page('*',               ctx => this.setState({ component: <FourOhFour />}))
+
+    this.setState({nbaJamMode: localStorage.nbaJamMode === "true"})
 
     Page.start()
   }
@@ -41,5 +54,3 @@ class Console extends Component {
     return this.state.component
   }
 }
-
-export default Console
