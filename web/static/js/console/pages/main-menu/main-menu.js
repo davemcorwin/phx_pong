@@ -12,13 +12,7 @@ export default class MainMenu extends Component {
   };
 
   onSelect(item) {
-    if (item.action === 'challenge') {
-      // Meteor.call("newGameFromChallenge", item.challenge, (_,gameId) => {
-      //   this.transitionTo('' + gameId);
-      // });
-    } else {
-      Page(item.target)
-    }
+    Page(item.target)
   }
 
   render() {
@@ -26,13 +20,13 @@ export default class MainMenu extends Component {
     const { gameId } = this.props
 
     const menuItems = [
-      { title: "Play",     action: 'play',     target: "" },
-      { title: "Leaders",  action: 'leaders',  target: "/leaders" },
-      { title: "Settings", action: 'settings', target: "/settings" }
+      { title: 'Play',     action: 'play',     target: '/choose-players' },
+      { title: 'Leaders',  action: 'leaders',  target: '/leaders' },
+      { title: 'Settings', action: 'settings', target: '/settings' }
     ]
 
     if (gameId) {
-      menuItems.push({ title: "Resume Game", action: 'resume', target: `/games/${gameId}` })
+      menuItems.push({ title: 'Resume Game', action: 'resume', target: `/games/${gameId}` })
     }
 
     return (
