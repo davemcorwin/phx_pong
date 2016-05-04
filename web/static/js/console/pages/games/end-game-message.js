@@ -23,7 +23,7 @@ export class EndGameMessage extends Component {
   componentWillReceiveProps(nextProps) {
     const { createGameResult } = nextProps
     if (createGameResult && createGameResult.fulfilled) {
-      Page(`${createGameResult.value.id}`)
+      Page(`/games/${createGameResult.value.id}`)
     }
   }
 

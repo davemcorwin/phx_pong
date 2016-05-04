@@ -18,15 +18,12 @@ export default class Console extends Component {
   };
 
   updateSettings(settings) {
-    this.setState(settings)
+    this.setState(settings, () => localStorage.nbaJamMode = this.state.nbaJamMode)
   }
 
   constructor() {
     super()
-    this.state = {
-      component: <div />,
-      nbaJamMode: false
-    }
+    this.state = { component: <div /> }
   }
 
   getChildContext() {
@@ -43,6 +40,8 @@ export default class Console extends Component {
     Page('/choose-players', ctx => this.setState({ component: <ChoosePlayers />}))
     Page('/games/:id',      ctx => this.setState({ component: <Games gameId={ctx.params.id} />}))
     Page('*',               ctx => this.setState({ component: <FourOhFour />}))
+
+    this.setState({nbaJamMode: localStorage.nbaJamMode === "true"})
 
     Page.start()
   }

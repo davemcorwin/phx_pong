@@ -5,7 +5,7 @@ import { PromiseState } from 'react-refetch'
 import connect        from '../../lib/api'
 import * as Game      from '../../lib/game'
 import { Keys }       from '../../lib/key-handler'
-import Container      from '../../components'
+import { Container }  from '../../components'
 import PlayerPanel    from './player-panel'
 import EndGameMessage from './end-game-message'
 import ServingMenu    from './serving-menu'
@@ -44,6 +44,10 @@ export class Games extends Component {
     this.props.updateGame(newGame)
   }
 
+  componentDidMount() {
+    localStorage.gameId = this.props.gameId
+  }
+
   render() {
 
     const { nbaJamMode } = this.context
@@ -62,7 +66,7 @@ export class Games extends Component {
               listenKey={Keys.LEFT}
               onScore={this.handleScore.bind(this, game, player1)}
               player={player1}
-              playerStatus={nbaJamMode && Game.playerStatus(game, player1)} />
+              playerStatus={Game.playerStatus(game, player1, nbaJamMode)} />
 
             <PlayerPanel
               active={Game.inProgress(game)}
@@ -70,7 +74,7 @@ export class Games extends Component {
               listenKey={Keys.RIGHT}
               onScore={this.handleScore.bind(this, game, player2)}
               player={player2}
-              playerStatus={nbaJamMode && Game.playerStatus(game, player2)} />
+              playerStatus={Game.playerStatus(game, player2, nbaJamMode)} />
 
             { Game.isPending(game) ?
                 <ServingMenu game={game} onChoose={updateGame}/> : null

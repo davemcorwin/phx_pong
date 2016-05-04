@@ -18,7 +18,7 @@ export default class GameMessage extends Component {
 
     return (
       <div className={styles.gameMessage}>
-        { messages.map(msg => <p>{msg}</p>) }
+        { messages.map(msg => <p key={msg}>{msg}</p>) }
         { children }
       </div>
     )

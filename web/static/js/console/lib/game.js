@@ -24,7 +24,8 @@ export function isOver(game) {
   return game.status === 'complete'
 }
 
-export function playerStatus(game, player) {
+export function playerStatus(game, player, nbaJamMode) {
+  if (!nbaJamMode) return 'normal'
   const log = game.log
   return log.length > 3 && log.slice(-4).every(id => id === player.id) ?
       'on-fire' :

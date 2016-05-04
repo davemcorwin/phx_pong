@@ -60,8 +60,8 @@ export default class PlayerPanel extends Component {
     const { isServer, player, playerStatus } = this.props
 
     const scoreStyles = {
-      fontSize: '45vh',
-      marginTop: '20vh'
+      marginTop: '2vh',
+      fontSize: '20vw'
     }
 
     const servingMsgStyles = {
@@ -73,9 +73,9 @@ export default class PlayerPanel extends Component {
         status={playerStatus}
         title={player.name || 'Unknown'}>
 
-        <h1 styles={scoreStyles}>{player.score}</h1>
+        <p style={scoreStyles}>{player.score}</p>
 
-        { isServer ? <span syles={servingMsgStyles}>Serving</span> : null }
+        { isServer ? <span style={servingMsgStyles}>Serving</span> : null }
 
       </PlayerContainer>
     )

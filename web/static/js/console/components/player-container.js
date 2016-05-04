@@ -1,5 +1,5 @@
 import React, { Component, PropTypes as PT } from 'react'
-import classnames from 'classnames'
+import cn from 'classnames'
 import styles from './player-container.scss'
 
 import Menu from './menu'
@@ -7,7 +7,7 @@ import Menu from './menu'
 export default class PlayerContainer extends Component {
 
   static propTypes = {
-    status: PT.string,
+    status: PT.oneOfType([PT.string, PT.bool]),
     title:  PT.string.isRequired
   };
 
@@ -15,21 +15,20 @@ export default class PlayerContainer extends Component {
 
     const { children, status, title } = this.props
 
-    const classes = classnames(styles.playerContainer, styles[status])
     return (
-      <div className={classes}>
-      
-        <p>{title}</p>
+      <div className={cn(styles.playerContainer)}>
+        <div className={styles[status]}>
+          <h1>{title}</h1>
 
-        {this.props.children}
+          {this.props.children}
 
-        { status === 'on-fire' ?
-          <img
-            className={styles.flames}
-            src="/images/flame.gif"/>
-          : null
-        }
-
+          { status === 'on-fire' ?
+            <img
+              className={styles.flames}
+              src="/images/flame.gif"/>
+            : null
+          }
+        </div>
       </div>
     )
   }

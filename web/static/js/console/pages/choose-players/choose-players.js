@@ -31,7 +31,7 @@ export class ChoosePlayers extends Component {
 
     if (createGameResult) {
       if (createGameResult.fulfilled) {
-        Page(`${createGameResult.value.id}`)
+        Page(`/games/${createGameResult.value.id}`)
       } else if (createGameResult.rejected) {
         this.setState({error: createGameResult.reason})
       }
